@@ -1,10 +1,20 @@
 import React from 'react'
 
-import { ExampleComponent } from 'jsonform'
+import JsonForm from 'jsonform'
 import 'jsonform/dist/index.css'
 
+const fields = {
+  'name': {
+    component: 'text',
+    props: {
+      label: 'Name',
+      value: 'Lorem Ipsum'
+    }
+  },
+}
+
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return <JsonForm components={fields} />
 }
 
 export default App
