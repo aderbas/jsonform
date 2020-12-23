@@ -9,7 +9,7 @@ import React from "react"
 import Component from './components';
 import { Provider } from 'react-redux';
 import { Store } from './store';
-import {initialData} from './util';
+import {initialData,ControlButtons} from './util';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -36,49 +36,20 @@ const Container = ({...props}) => {
 
   /** Mount input components */
   return (
-    <div style={{padding: 2}}>
+    <React.Fragment>
       {Object.keys(components).map((nodeName, key) => (
-        <React.Fragment key={key}>
+        <div style={{padding: 6}} key={key}>
           {Component({
             node: components[nodeName], 
             name: nodeName, 
             value: formData[nodeName],
             handlerChange: _onChange
           })}
-        </React.Fragment>        
+        </div>        
       ))}
-    </div>
+    </React.Fragment>
   )
 }
-
-/**
- * Buttons
- * @param {any} props 
- */
-// const Buttons = ({...props}) => {
-//   const {onSave,onCancel} = props;
-  
-//   const _handlerClickSave = () => {
-//     const {formData} = props;
-//     if(typeof onSave === 'function'){
-//       // send data to parent component
-//       onSave(formData);
-//     }
-//   }
-
-//   const _handlerClickCancel = () => {
-//     if(typeof onCancel === 'function'){
-//       onCancel();
-//     }    
-//   }
-
-//   return (
-//     <div>
-//       {onCancel?<Button onClick={_handlerClickCancel}>Cancelar</Button>:null}
-//       {onSave?<Button onClick={_handlerClickSave} variant="contained" color="primary">Salvar</Button>:null}
-//     </div>
-//   )
-// }
 
 /**
  * Main render
@@ -113,7 +84,7 @@ const FlowContent = connect(mapStateToProps, mapDispatchToProps)(
     }
     
     /**
-     * When an input is updated by a source external to the internal Redux.
+     * When an input is updated by a external source, send to the internal redux.
      */ 
     updateExternalValues(){
       const {components,changeField} = this.props;
@@ -131,7 +102,8 @@ const FlowContent = connect(mapStateToProps, mapDispatchToProps)(
           <h6>{title}</h6>
           <div>
             <Container {...others} />
-          </div> 
+          </div>
+          <ControlButtons {...others} />
         </form>
       );    
     }
