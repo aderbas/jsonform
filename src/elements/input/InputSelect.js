@@ -1,0 +1,103 @@
+/**
+ * Custom Input list for flow
+ * @author: Aderbal Nunes <aderbalnunes@gmail.com>
+ * @since: 24/06/2020
+ */
+import React from 'react';
+import {InputLabel,FormControl,Select} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import baseComponent from '../../BaseComponent';
+
+class InputSelect extends React.PureComponent {
+
+  state = {
+    localOptions: [{value: -1, label: ''}]
+  }
+
+  async setOptions(){
+    const {options,dependency} = this.props;
+    if(typeof options === 'function' && this._isMounted){
+      if(!dependency){
+        try{
+          const data = await options();
+          if(this._isMounted){
+            this.setState(state => ({localOptions: [...state.localOptions, ...data]}));
+          }
+        }catch(err){
+          this.setState(state => ({localOptions: [...state.localOptions]}));
+        }
+      }else{
+        document.addEventListener(`${dependency}_change`, this.dependencyChanged);
+      }
+    }else{
+      this.setState(state => ({...state, localOptions: [...state.localOptions, ...options]}))
+    }
+  }
+
+  componentDidMount(){
+    this._isMounted = true;
+    this.setOptions();
+  }
+
+  dependencyChanged = async(event) => {
+    const {options} = this.props;
+    const {detail} = event;
+    if(detail && typeof options === 'function'){
+      try{
+        const data = await options(detail);
+        if(this._isMounted){
+          this.setState(state => ({localOptions: [...state.localOptions, ...data]}));
+        }        
+      }catch(err){
+        this.setState(state => ({localOptions: [...state.localOptions]}));
+      }    
+    }
+  }
+
+  componentWillUnmount(){
+    const {dependency} = this.props;
+    this._isMounted = false;
+    if(dependency){
+      // remove listener
+      document.removeEventListener(`${dependency}_change`, this.dependencyChanged);
+    }
+  }
+
+  render() {
+    const {localOptions} = this.state;
+    const {value,id,onChange,label,width,required} = this.props;
+    return (
+      <FormControl >
+        <InputLabel htmlFor={id}>{`${label} ${required?'*':''}`}</InputLabel>
+        <Select
+          native
+          id={id}
+          name={id}
+          value={value}
+          inputProps={{ 
+            'aria-label': id,
+            style: width?{width: width}:null
+          }}
+          onChange={onChange}
+        >
+          {localOptions.map((opt, key) => (
+            <option key={key} value={opt.value?opt.value:opt.label}>
+              {opt.label}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+    )
+  }
+}
+
+InputSelect.propTypes = {
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string,
+}
+
+InputSelect.defaultProps = {
+  width: 200
+}
+
+export default baseComponent(null)(InputSelect);
