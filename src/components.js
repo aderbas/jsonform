@@ -11,7 +11,8 @@ import * as Elements from './elements';
 const Components = {
   text    : Elements.TextInput,
   select  : Elements.InputSelect,
-  divider : Elements.Separator
+  divider : Elements.Separator,
+  switch  : Elements.InputSwitch,
 };
 
 // create component by json node
