@@ -14,6 +14,7 @@ const defaultValue = props => {
       case 'integer': return 0;
       case 'object': return {};
       case 'string': return '';
+      case 'bool': return false;
       case 'date': return new Date();
       default: return '';
     }
