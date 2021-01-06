@@ -26,12 +26,22 @@ const mapDispatchToProps = dispatch => bindActionCreators({changeField,changeDat
  * @param {any} props
  */
 const Container = ({...props}) => {
-  const {components,formData,changeField} = props;
+  const {components,formData,changeField,dependencies} = props;
 
   /** onChange for fields */
   const _onChange = (event) => {
-    changeField(event.target.name, event.target.value);
+    changeField(event.target.name, event.target.type==='checkbox'?event.target.checked:event.target.value);
+    checkDependecy(event);
   }
+
+  const checkDependecy = (event) => {
+    const {target} = event;
+    if(target.name && dependencies.length > 0){
+      if(dependencies.filter(d => d === target.name)[0]){
+        document.dispatchEvent(new CustomEvent(`${target.name}_change`, {detail: target.value}));
+      }
+    }
+  }  
 
 
   /** Mount input components */
@@ -54,7 +64,7 @@ const Container = ({...props}) => {
 /**
  * Main render
  */
-const FlowContent = connect(mapStateToProps, mapDispatchToProps)(
+const FormContent = connect(mapStateToProps, mapDispatchToProps)(
 
   class Content extends React.PureComponent {
 
@@ -116,11 +126,27 @@ const FlowContent = connect(mapStateToProps, mapDispatchToProps)(
  */
 class JsonForm extends React.PureComponent {
 
+  state = {
+    dependencies: []
+  }
+
+  componentDidMount(){
+    const {components} = this.props;
+    if(components){
+      const deps = Object.keys(components).filter(key => components[key].props.dependency);
+      if(deps && deps.length > 0){
+        const dependencies = deps.map(name => components[name].props.dependency);
+        this.setState({dependencies: dependencies});
+      }
+    }
+  }
+
   render(){
     return (
       <Provider store={Store}>
-        <FlowContent
+        <FormContent
           {...this.props} 
+          {...this.state}
         />
       </Provider>
     )

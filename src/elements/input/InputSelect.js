@@ -8,10 +8,13 @@ import {InputLabel,FormControl,Select} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 
+// default value
+const defaultOption = [{value: -1, label: 'Choice'}];
+
 class InputSelect extends React.PureComponent {
 
   state = {
-    localOptions: [{value: -1, label: ''}]
+    localOptions: [{value: -1, label: 'Loading...'}]
   }
 
   async setOptions(){
@@ -21,12 +24,14 @@ class InputSelect extends React.PureComponent {
         try{
           const data = await options();
           if(this._isMounted){
-            this.setState(state => ({localOptions: [...state.localOptions, ...data]}));
+            this.setState({localOptions: [...defaultOption, ...data]});
           }
         }catch(err){
+          console.log(err);
           this.setState(state => ({localOptions: [...state.localOptions]}));
         }
       }else{
+        this.setState({localOptions: [{value: -1, label: 'Escolha'}]});
         document.addEventListener(`${dependency}_change`, this.dependencyChanged);
       }
     }else{
@@ -44,12 +49,13 @@ class InputSelect extends React.PureComponent {
     const {detail} = event;
     if(detail && typeof options === 'function'){
       try{
+        this.setState({localOptions: [{value: -1, label: 'Loading...'}]});
         const data = await options(detail);
         if(this._isMounted){
-          this.setState(state => ({localOptions: [...state.localOptions, ...data]}));
+          this.setState({localOptions: [...defaultOption, ...data]});
         }        
       }catch(err){
-        this.setState(state => ({localOptions: [...state.localOptions]}));
+        this.setState({localOptions: defaultOption});
       }    
     }
   }
