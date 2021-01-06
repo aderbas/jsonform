@@ -1,6 +1,6 @@
 # jsonform
 
-> Create material design form from a JSON
+> Create material design form from a JSON object
 
 [![NPM](https://img.shields.io/npm/v/jsonform.svg)](https://www.npmjs.com/package/jsonform) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
@@ -45,11 +45,11 @@ class MyClass extends Component {
   }
 }
 ```
-## Popule with remote data
+## Popule form with remote data
 
 ```jsx
 const formFields = {
-  'name': {
+  'user_name': {
     component: 'text',
     props: {
       label: 'Name',
@@ -61,20 +61,31 @@ const formFields = {
     props: {
       label: 'User Type',
       options: () => new Promise(resolve => {
-        fetch('<url endpoint>')
+        fetch('<rest api endpoint>')
           .then(res => res.json())
-          .then(json => resolve(json.result.map(r => ({label: r.type, value: r.id}))
+          .then(json => resolve(json.map(r => ({label: r.type, value: r.id}))
           .catch(resolve([]);
       })
-    }    
+    }
   }
 }
+
+// assume that the endpoint API returns something like: 
+// { result: {user_id: 321, user_type: 123, user_name: 'Foo'} }
+const fetchRemoteData = user => new Promise(resolve => {
+  fetch(`<url endpoint>/${user}`)
+    .then(res => res.json())
+    .then(json => resolve({data: json.result}))
+    .catch(() => resolve({}))
+});
 
 class MyClass extends Component {
   render() {
     return (
       <JsonForm 
         components={formFields}
+        fetchData={fetchRemoteData}
+        fetchParams={[321,]}
         onSave={(data) => console.log(data)}
       />
     )
@@ -82,6 +93,72 @@ class MyClass extends Component {
 }
 ```
 
+## Elements
+
+* Text input
+> props required: label
+```jsx
+'phone_number': {
+  component: 'text',
+  props: {
+    label: 'Phone',
+    required: true,
+    value: "(123) 456 7899",
+    validation: /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
+    onKeyPress: (ev) => {  }
+  }
+}
+```
+
+* Input Select
+> props required: label and options
+```jsx
+// fixed values
+'user_level': {
+  component: 'select',
+  props: {
+    label: 'User Level',
+    required: true,
+    options: [
+      {value: 1, label: 'Admin'},
+      {value: 2, label: 'Default'},
+    ]
+  }
+}
+```
+```jsx
+// fetch remote data options
+// assume that the endpoint API returns something like: [{id: 123, label: 'Foo'},...]
+'user_status': {
+  component: 'select',
+  props: {
+    label: 'User Status',
+    options: () => new Promise(resolve => {
+      fetch('<rest api endpoint>')
+        .then(res => res.json())
+        .then(json => resolve(json.map(r => ({label: r.label, value: r.id}))
+        .catch(resolve([]);
+    })
+  }
+}
+```
+```jsx
+// dependency
+// fetch remote data based on value selected in other select
+'user_profile': {
+  component: 'select',
+  props: {
+    label: 'User Profile',
+    depends: 'user_level',
+    options: level => new Promise(resolve => {
+      fetch(`<rest api endpoint>/${level}`)
+        .then(res => res.json())
+        .then(json => resolve(json.map(r => ({label: r.profile, value: r.id}))
+        .catch(resolve([]);
+    })
+  }
+}
+```
 
 ## License
 

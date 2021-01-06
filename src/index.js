@@ -135,7 +135,7 @@ class JsonForm extends React.PureComponent {
     if(components){
       const deps = Object.keys(components).filter(key => components[key].props.dependency);
       if(deps && deps.length > 0){
-        const dependencies = deps.map(name => components[name].props.dependency);
+        const dependencies = deps.map(name => components[name].props.depends);
         this.setState({dependencies: dependencies});
       }
     }
