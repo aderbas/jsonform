@@ -159,6 +159,18 @@ class MyClass extends Component {
   }
 }
 ```
+* Switch
+> props required: label
+```jsx
+  'user_is_master': {
+    component: 'switch',
+    props: {
+      label: 'Master user',
+      value: true,
+      value_type: 'bool'
+    }
+  }
+```
 
 ## License
 
