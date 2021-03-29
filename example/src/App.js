@@ -28,6 +28,12 @@ const fields = {
       options: fetchList,
       required: true
     }
+  },
+  'file': {
+    component: 'upload',
+    props: {
+      label: 'File Upload'
+    }
   }
 }
 

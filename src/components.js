@@ -13,6 +13,7 @@ const Components = {
   select  : Elements.InputSelect,
   divider : Elements.Separator,
   switch  : Elements.InputSwitch,
+  upload  : Elements.UploadBox,
 };
 
 // create component by json node
