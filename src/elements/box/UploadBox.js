@@ -70,7 +70,7 @@ class UploadBox extends PureComponent{
     if(files && files.length > 0){
       const listFiles = Array.from(files);
       if(onChange){
-        onChange({target: id, value: listFiles});
+        onChange({target: {name: id, value: listFiles, type: 'upload'}});
       }
     }
   }
@@ -104,7 +104,7 @@ class UploadBox extends PureComponent{
   };
 }
 
-UploadDropArea.propTypes = {
+UploadBox.propTypes = {
   onChange: PropTypes.func,
   label: PropTypes.string,
   info: PropTypes.string,

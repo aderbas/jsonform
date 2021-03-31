@@ -29,7 +29,7 @@ const fields = {
       required: true
     }
   },
-  'file': {
+  'filec': {
     component: 'upload',
     props: {
       label: 'File Upload'

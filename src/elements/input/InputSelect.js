@@ -27,7 +27,6 @@ class InputSelect extends React.PureComponent {
             this.setState({localOptions: [...defaultOption, ...data]});
           }
         }catch(err){
-          console.log(err);
           this.setState(state => ({localOptions: [...state.localOptions]}));
         }
       }else{

@@ -171,6 +171,17 @@ class MyClass extends Component {
     }
   }
 ```
+* File upload
+> props required: label
+```jsx
+  'file_upload': {
+    component: 'upload',
+    props: {
+      label: 'File Upload',
+      info: 'CSV or XML file'
+    }
+  }
+```
 
 ## License
 
