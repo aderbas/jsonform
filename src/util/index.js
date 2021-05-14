@@ -40,8 +40,7 @@ export const initialData = (fields) => {
  * @param {any} props 
  */
 export const ControlButtons = ({...props}) => {
-  const {onSave,onCancel,boxProps} = props;
-  
+  const {onSave,onCancel,boxProps,saveText,cancelText} = props;
   const _handlerClickSave = () => {
     const {formData} = props;
     if(typeof onSave === 'function'){
@@ -58,8 +57,8 @@ export const ControlButtons = ({...props}) => {
 
   return (
     <Box p={1} {...boxProps}>
-      {onCancel?<Button onClick={_handlerClickCancel}>Cancelar</Button>:null}
-      {onSave?<Button onClick={_handlerClickSave} variant="contained" color="primary">Salvar</Button>:null}
+      {onCancel?<Button onClick={_handlerClickCancel}>{cancelText ?? 'Cancel'}</Button>:null}
+      {onSave?<Button onClick={_handlerClickSave} variant="contained" color="primary">{saveText ?? 'Save'}</Button>:null}
     </Box>
   )
 }

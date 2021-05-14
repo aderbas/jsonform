@@ -93,6 +93,45 @@ class MyClass extends Component {
 }
 ```
 
+## Split form into columns
+
+![Splited columns](./example/public/assets/images/split_columns.png)
+```jsx
+const formFields = [{
+  'user_name': {
+    component: 'text',
+    props: {
+      label: 'Name',
+      required: true
+    }
+  },
+  'user_email': {
+    component: 'text',
+    props: {
+      label: 'E-mail',
+      required: true
+    }
+  },
+}, {
+  'user_password': {
+    component: 'text',
+    props: {
+      label: 'Password',
+      required: true,
+      type: 'password'
+    }
+  },
+  'user_repassword': {
+    component: 'text',
+    props: {
+      label: 'Password',
+      required: true,
+      type: 'password'
+    }
+  }   
+}]
+```
+
 ## Elements
 
 * Text input
@@ -181,6 +220,20 @@ class MyClass extends Component {
       info: 'CSV or XML file'
     }
   }
+```
+
+## Options
+
+### Controls
+```jsx
+<JsonForm 
+  components={formFields} 
+  controlOptions={{
+    saveText: 'Save Form',
+    cancelText: 'Cancel'
+  }}
+  onSave={(data) => console.log(data)}
+/>
 ```
 
 ## License

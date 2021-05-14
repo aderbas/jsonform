@@ -12,35 +12,47 @@ const fetchList = () => new window.Promise(resolve => {
     .catch(() => resolve([]));
 });
 
-const fields = {
-  'name': {
+const formFields = [{
+  'user_name': {
     component: 'text',
     props: {
       label: 'Name',
-      value: 'Lorem Ipsum',
       required: true
     }
   },
-  'user': {
-    component: 'select',
+  'user_email': {
+    component: 'text',
     props: {
-      label: 'User',
-      options: fetchList,
+      label: 'E-mail',
       required: true
     }
   },
-  'filec': {
-    component: 'upload',
+}, {
+  'user_password': {
+    component: 'text',
     props: {
-      label: 'File Upload'
+      label: 'Password',
+      required: true,
+      type: 'password'
     }
-  }
-}
+  },
+  'user_repassword': {
+    component: 'text',
+    props: {
+      label: 'Confirm password',
+      required: true,
+      type: 'password'
+    }
+  }   
+}]
 
 const App = () => {
   return (
     <JsonForm 
-      components={fields} 
+      components={formFields} 
+      controlOptions={{
+        saveText: 'Save Form'
+      }}
       onSave={(data) => console.log(data)}
     />
   )
