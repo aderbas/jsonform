@@ -235,6 +235,32 @@ const formFields = [{
   onSave={(data) => console.log(data)}
 />
 ```
+### Skip property on model
+```jsx
+const formFields = {
+  'name': {
+    component: 'text',
+    props: {
+      label: 'Name',
+      required: true
+    }
+  },
+  'email': {
+    component: 'text',
+    props: {
+      label: 'Email',
+      required: true
+    }    
+  },
+  'info': {
+    component: 'info',
+    props: {
+      skip: true,
+      text: 'Tip: Use a non commercial email.'
+    }
+  }  
+}
+```
 
 ## License
 
