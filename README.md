@@ -235,7 +235,7 @@ const formFields = [{
   onSave={(data) => console.log(data)}
 />
 ```
-### Skip property on model
+### Skip a property in the model
 ```jsx
 const formFields = {
   'name': {
