@@ -27,17 +27,17 @@ const mapDispatchToProps = dispatch => bindActionCreators({changeField,changeDat
  * @param {any} props
  */
 const Container = ({...props}) => {
-  const {components,formData,onChange} = props;
+  const {field,formData,onChange} = props;
 
-  if(!components) return null;
+  if(!field) return null;
 
   /** Mount input components */
   return (
     <React.Fragment>
-      {Object.keys(components).map((nodeName, key) => (
+      {Object.keys(field).map((nodeName, key) => (
         <div style={{padding: 6}} key={key}>
           {Component({
-            node: components[nodeName], 
+            node: field[nodeName], 
             name: nodeName, 
             value: formData[nodeName],
             handlerChange: onChange
@@ -55,7 +55,14 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
 
   class Content extends React.PureComponent {
 
-    state = { loading: false }
+    constructor(props){
+      super(props);
+      this.state = {
+        loading: false, 
+        dependencies: [],
+        fields: !Array.isArray(props.components)?[props.components]:props.components
+      }
+    }
 
 
     componentDidMount(){
@@ -67,26 +74,9 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       }else{
         changeData(initialData(collection));
       }
-    }
-
-
-    // componentDidMount(){
-    //   const {fetchData,changeData,fetchParams,components} = this.props;
-    //   if(fetchData && typeof fetchData === 'function'){
-    //     this.setState({loading: true});
-    //     (fetchParams?fetchData(...fetchParams):fetchData())
-    //       .then(res => { 
-    //         this.setState({loading: false});
-    //         changeData(res.data);
-    //       })
-    //       .catch(() => {
-    //         this.setState({loading: false});
-    //         changeData(createModel(components));
-    //       });
-    //   }else{
-    //     changeData(createModel(components));
-    //   }
-    // }    
+      this._mountDependecies();
+      this._getDataForm();      
+    }   
 
     componentWillUnmount(){
       const {changeData} = this.props;
@@ -97,6 +87,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       const {components} = this.props;
       if(nextProps.components){
         if(JSON.stringify(components) !== JSON.stringify(nextProps.components)){
+          this._getDataForm();
           this.updateExternalValues();
         }
       }
@@ -106,13 +97,37 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
      * When an input is updated by a external source, send to the internal redux.
      */ 
     updateExternalValues(){
-      const {components,changeField} = this.props;
-      Object.keys(components).forEach(k => {
-        if(components[k].props.value){
-          changeField(k, components[k].props.value);
+      const {changeField} = this.props;
+      const {fields} = this.state;
+      let collection = {};
+      fields.forEach(it => collection = {...collection, ...it});      
+      Object.keys(collection).forEach(k => {
+        if(collection[k].props.value){
+          changeField(k, collection[k].props.value);
         }
       });
-    }   
+    }
+    
+    _getDataForm(){
+      const {fetchData,changeData,fetchParams} = this.props;
+      const {fields} = this.state;
+      let collection = {};
+      fields.forEach(it => collection = {...collection, ...it});
+      if(fetchData && typeof fetchData === 'function'){
+        this.setState({loading: true});
+        (fetchParams?fetchData(...fetchParams):fetchData())
+          .then(res => { 
+            this.setState({loading: false});
+            changeData(res.data);
+          })
+          .catch(() => {
+            this.setState({loading: false});
+            changeData(initialData(collection));
+          });
+      }else{
+        changeData(initialData(collection));
+      }
+    }    
     
     /** onChange for fields */
     _onChange = (event) => {
@@ -124,7 +139,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
     /** Check if field has dependency */
     _checkDependecy = (event) => {
       const {target} = event;
-      const {dependencies} = this.props;
+      const {dependencies} = this.state;
       if(target.name && dependencies.length > 0){
         if(dependencies.filter(d => d === target.name)[0]){
           document.dispatchEvent(new CustomEvent(`${target.name}_change`, {detail: target.value}));
@@ -132,23 +147,40 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       }
     }     
 
+    /** Mount dependencies list */
+    _mountDependecies = () => {
+      const {fields} = this.props;
+      // dependency array
+      if(fields){
+        let collection = {};
+        fields.forEach(it => collection = {...collection, ...it});
+        const deps = Object.keys(collection).filter(key => collection[key].props.dependency);
+        if(deps && deps.length > 0){
+          const dependencies = deps.map(name => collection[name].props.dependency);
+          this.setState({dependencies: dependencies});
+        }
+      }    
+    }    
+    
     render(){
-      const {title,fields,controlOptions, ...others} = this.props;
+      const {title,controlOptions, ...others} = this.props;
+      const {loading,fields} = this.state;
       return (
         <form>
           <h6>{title}</h6>
           <Grid container>
-            {fields.map((components, k) => ((
+            {fields.map((row, k) => ((
               <Grid item key={k}>
                 <Container
                   onChange={this._onChange}
-                  components={components} 
+                  field={row} 
                   {...others}
                 />
               </Grid>
             )))}
           </Grid>
           <ControlButtons 
+            loading={loading}
             {...others} 
             {...controlOptions} />
         </form>
@@ -163,49 +195,11 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
  */
 class JsonForm extends React.PureComponent {
 
-  state = {
-    dependencies: [],
-    collection: {},
-    fields: []
-  }
-
-  _checkRows = () => {
-    const {components} = this.props;
-    this.setState({fields: !Array.isArray(components)?[components]:components});
-    this._mountDependecies();
-  }
-
-  _mountDependecies = () => {
-    const {fields} = this.state;
-    // dependency array
-    if(fields){
-      const collection = {};
-      fields.forEach(it => {
-        Object.keys(it).forEach(k => {
-          collection[k] = it[k];
-        })
-      }); 
-      // cache it
-      this.setState({collection: collection});   
-      const deps = Object.keys(collection).filter(key => collection[key].props.dependency);
-      if(deps && deps.length > 0){
-        const dependencies = deps.map(name => collection[name].props.dependency);
-        this.setState({dependencies: dependencies});
-      }
-    }  
-  }
-
-  componentDidMount(){
-    this._checkRows();
-  }
-
   render(){
-    const {components, ...others} = this.props;
     return (
       <Provider store={Store}>
         <FormContainer
-          {...others} 
-          {...this.state}
+          {...this.props}
         />
       </Provider>
     )
