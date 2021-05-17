@@ -4,6 +4,9 @@
 
 [![NPM](https://img.shields.io/npm/v/jsonform.svg)](https://www.npmjs.com/package/jsonform) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+## Dev Dependencies
+* [Material-UI](https://material-ui.com/pt/)
+
 ## Install
 
 ```bash
