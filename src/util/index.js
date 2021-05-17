@@ -28,7 +28,7 @@ const defaultValue = props => {
 export const initialData = (fields) => {
   let data = {};
   Object.keys(fields).forEach(k => {
-    if(fields[k].props){
+    if(fields[k].props && !fields[k].props.skip){
       data[k] = fields[k].props.value?fields[k].props.value:defaultValue(fields[k].props)
     }
   });
