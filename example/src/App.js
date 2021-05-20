@@ -3,7 +3,7 @@ import React from 'react'
 import JsonForm from 'jsonform'
 import 'jsonform/dist/index.css'
 
-const fetchList = () => new window.Promise(resolve => {
+export const fetchList = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=5')
     .then(res => res.json())
     .then(json => resolve(json.results.map(row => ({

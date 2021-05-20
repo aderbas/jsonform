@@ -66,14 +66,6 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
 
 
     componentDidMount(){
-      const {fetchData,changeData,fetchParams,collection} = this.props;
-      if(fetchData && typeof fetchData === 'function'){
-        (fetchParams?fetchData(...fetchParams):fetchData())
-          .then(res => changeData(res.data))
-          .catch(() => changeData(initialData(collection)));
-      }else{
-        changeData(initialData(collection));
-      }
       this._mountDependecies();
       this._getDataForm();      
     }   
