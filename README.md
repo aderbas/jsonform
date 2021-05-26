@@ -137,9 +137,25 @@ const formFields = [{
 
 ## Custom components
 ```jsx
+
+const MyComponent = ({...props}) => {
+  const {id,value,onChange} = props;
+
+  const _increment = () => {
+    if(typeof onChange === 'function'){
+      onChange({target: {name: id, value: value + 1}})
+    }
+  }
+
+  return (
+    <Button onClick={_increment}>Increment {value}</Button>
+  )
+}
+
 const formFields = {
   'my_component': {
-    component: ({...props}) => <div>My Custon Component</div>
+    component: MyComponent,
+    props: { value: 1 }
   },
 }
 ```
