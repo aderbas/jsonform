@@ -135,6 +135,15 @@ const formFields = [{
 }]
 ```
 
+## Custom components
+```jsx
+const formFields = {
+  'my_component': {
+    component: ({...props}) => <div>My Custon Component</div>
+  },
+}
+```
+
 ## Elements
 
 * Text input
