@@ -90,6 +90,7 @@ class MyClass extends Component {
         fetchData={fetchRemoteData}
         fetchParams={[321,]}
         onSave={(data) => console.log(data)}
+        formChange={(data) => console.log(data)}
       />
     )
   }
