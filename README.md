@@ -90,6 +90,7 @@ class MyClass extends Component {
         fetchData={fetchRemoteData}
         fetchParams={[321,]}
         onSave={(data) => console.log(data)}
+        formChange={(data) => console.log(data)}
       />
     )
   }
@@ -133,6 +134,31 @@ const formFields = [{
     }
   }   
 }]
+```
+
+## Custom components
+```jsx
+
+const MyComponent = ({...props}) => {
+  const {id,value,onChange} = props;
+
+  const _increment = () => {
+    if(typeof onChange === 'function'){
+      onChange({target: {name: id, value: value + 1}})
+    }
+  }
+
+  return (
+    <Button onClick={_increment}>Increment {value}</Button>
+  )
+}
+
+const formFields = {
+  'my_component': {
+    component: MyComponent,
+    props: { value: 1 }
+  },
+}
 ```
 
 ## Elements

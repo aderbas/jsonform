@@ -19,6 +19,7 @@ const Components = {
 // create component by json node
 export default ({...props}) => {
   const {node, name, value, handlerChange} = props;
+  if(!node.props) node.props = {};
   // get node component
   const _props = {
     ...node.props,
@@ -27,7 +28,11 @@ export default ({...props}) => {
     onChange: handlerChange
   }
   if (typeof node.component !== 'undefined'){
-    return React.createElement(Components[node.component], _props);
+    return React.createElement(
+      (typeof node.component === 'string')
+        ? Components[node.component]
+        : node.component, _props
+    );
   }
 
   return React.createElement(
