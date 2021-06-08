@@ -169,7 +169,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
           <h6>{title}</h6>
           <Grid container>
             {fields.map((row, k) => ((
-              <Grid item key={k}>
+              <Grid item key={k} xs={12} lg md sm>
                 <Container
                   onChange={this._onChange}
                   field={row} 
