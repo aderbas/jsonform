@@ -4,3 +4,5 @@ export {default as InputSwitch} from './input/InputSwitch';
 export {default as Separator} from './layout/Separator';
 export {default as Info} from './layout/Info.js';
 export {default as UploadBox} from './box/UploadBox';
+export {default as MultiSelect} from './input/MultiSelect';
+export {default as InputRadioGroup} from './input/InputRadioGroup';

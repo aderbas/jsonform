@@ -1,16 +1,16 @@
 /**
-* Doc..
+* Input text Field
 * @author: Aderbal Nunes <aderbalnunes@gmail.com>
 * @since: 21/12/2020
-*
 */
 
 import React from "react"
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
-import {TextField,FormControl,InputAdornment} from '@material-ui/core';
+import {TextField,InputAdornment} from '@material-ui/core';
 
 class TextInput extends React.PureComponent {
+
   state = {
     error: false
   }
@@ -35,21 +35,19 @@ class TextInput extends React.PureComponent {
     const {id, dbClick, endAdornment, startAdornment, validation, ...rest} = this.props;
     const {error} = this.state;
     return (
-      <FormControl>
-        <TextField
-          id={id}
-          name={id}
-          error={error}
-          variant="outlined"
-          size="small"
-          onBlur={this._validate}
-          InputProps={{
-            endAdornment: endAdornment?<InputAdornment>{endAdornment}</InputAdornment>:null,
-            startAdornment: startAdornment?<InputAdornment>{startAdornment}</InputAdornment>:null
-          }}
-          {...rest} 
-        />
-      </FormControl>
+      <TextField
+        id={id}
+        name={id}
+        error={error}
+        variant="outlined"
+        size="small"
+        onBlur={this._validate}
+        InputProps={{
+          endAdornment: endAdornment?<InputAdornment>{endAdornment}</InputAdornment>:null,
+          startAdornment: startAdornment?<InputAdornment>{startAdornment}</InputAdornment>:null
+        }}
+        {...rest} 
+      />
     )
   }
 }

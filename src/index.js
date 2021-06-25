@@ -100,8 +100,11 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       });
     }
     
+    /**
+     * Get data for popule form if parent function exist
+     */
     _getDataForm(){
-      const {fetchData,changeData,fetchParams} = this.props;
+      const {fetchData,changeData,fetchParams,model} = this.props;
       const {fields} = this.state;
       let collection = {};
       fields.forEach(it => collection = {...collection, ...it});
@@ -114,14 +117,17 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
           })
           .catch(() => {
             this.setState({loading: false});
-            changeData(initialData(collection));
+            changeData(model?model:initialData(collection));
           });
       }else{
-        changeData(initialData(collection));
+        changeData(model?model:initialData(collection));
       }
     }    
     
-    /** onChange for fields */
+    /** 
+     * onChange for fields 
+     * @param {object} event
+     */
     _onChange = (event) => {
       const {changeField,formChange} = this.props;
       this._checkDependecy(event);
@@ -135,7 +141,10 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       }
     }
 
-    /** Check if field has dependency */
+    /** 
+     * Check if field has dependency 
+     * @param {object} event
+     */
     _checkDependecy = (event) => {
       const {target} = event;
       const {dependencies} = this.state;
@@ -146,7 +155,9 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       }
     }     
 
-    /** Mount dependencies list */
+    /** 
+     * Mount dependencies list 
+     */
     _mountDependecies = () => {
       const {fields} = this.props;
       // dependency array
@@ -166,10 +177,10 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       const {loading,fields} = this.state;
       return (
         <form>
-          <h6>{title}</h6>
+          <h4>{title}</h4>
           <Grid container>
             {fields.map((row, k) => ((
-              <Grid item key={k}>
+              <Grid item key={k} xs={12} lg md sm>
                 <Container
                   onChange={this._onChange}
                   field={row} 

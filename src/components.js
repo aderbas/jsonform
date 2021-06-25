@@ -9,34 +9,49 @@ import * as Elements from './elements';
 
 // list
 const Components = {
-  text    : Elements.TextInput,
-  select  : Elements.InputSelect,
-  divider : Elements.Separator,
-  switch  : Elements.InputSwitch,
-  upload  : Elements.UploadBox,
+  text        : Elements.TextInput,
+  info        : Elements.Info,
+  select      : Elements.InputSelect,
+  multiselect : Elements.MultiSelect,
+  divider     : Elements.Separator,
+  switch      : Elements.InputSwitch,
+  upload      : Elements.UploadBox,
+  radiogroup  : Elements.InputRadioGroup,
 };
 
-// create component by json node
+/**
+ * Component fail
+ */
+const failComponent = () => React.createElement(
+  () => <div>{`Error creating component. Or does not exist.`}</div>,
+  {key: 'fail-component-created'}
+)
+
+/**
+ * create component by json node
+ */
 export default ({...props}) => {
   const {node, name, value, handlerChange} = props;
   if(!node.props) node.props = {};
-  // get node component
+
   const _props = {
     ...node.props,
     id: name,
     value: value?value:'',
-    onChange: handlerChange
+    onChange: handlerChange,
   }
-  if (typeof node.component !== 'undefined'){
-    return React.createElement(
-      (typeof node.component === 'string')
-        ? Components[node.component]
-        : node.component, _props
-    );
+  if(typeof node.component !== 'undefined'){
+
+    // check node component
+    if(typeof node.component === 'string'){
+      const _component = Components[node.component];
+      if(!_component) return failComponent();
+
+      return React.createElement(_component, _props);
+    }
+
+    return React.createElement(node.component, _props);
   }
 
-  return React.createElement(
-    () => <div>{`The component ${node.component} has not been created yet.`}</div>,
-    {key: 'fail-component-created'}
-  )
+  return failComponent();
 };

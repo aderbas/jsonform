@@ -5,6 +5,7 @@
  * 
  */
 import React from 'react';
+import ResponsiveControl from './elements/ResponsiveControl';
 
 const initialOptions = {
   padding: {
@@ -30,9 +31,9 @@ const baseComponent = (options = initialOptions) => (Component) => {
     }
 
     return (
-      <div style={{display: 'block'}}>
+      <ResponsiveControl>
         <Component {..._props} />
-      </div>
+      </ResponsiveControl>
     );
   });
 
@@ -40,4 +41,4 @@ const baseComponent = (options = initialOptions) => (Component) => {
 }
 
 
-export default  baseComponent;
+export default baseComponent;

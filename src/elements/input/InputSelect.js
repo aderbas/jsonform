@@ -4,7 +4,7 @@
  * @since: 24/06/2020
  */
 import React from 'react';
-import {InputLabel,FormControl,Select} from '@material-ui/core';
+import {InputLabel,Select} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 
@@ -72,7 +72,7 @@ class InputSelect extends React.PureComponent {
     const {localOptions} = this.state;
     const {value,id,onChange,label,width,required} = this.props;
     return (
-      <FormControl >
+      <React.Fragment>
         <InputLabel htmlFor={id}>{`${label} ${required?'*':''}`}</InputLabel>
         <Select
           native
@@ -91,7 +91,7 @@ class InputSelect extends React.PureComponent {
             </option>
           ))}
         </Select>
-      </FormControl>
+      </React.Fragment>
     )
   }
 }

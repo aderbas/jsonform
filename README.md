@@ -227,6 +227,69 @@ const formFields = {
   }
 }
 ```
+* Multiselect
+> props required: label and options
+```jsx
+// fixed values
+'user_rights': {
+  component: 'multiselect',
+  props: {
+    label: 'User Rights',
+    required: true,
+    options: [
+      {value: 1, label: 'delete'},
+      {value: 2, label: 'update'},
+      {value: 3, label: 'insert'},
+    ]
+  }
+}
+```
+```jsx
+// fetch remote data options
+'user_rights': {
+  component: 'multiselect',
+  props: {
+    label: 'User Rights',
+    options: () => new Promise(resolve => {
+      fetch('<rest api endpoint>')
+        .then(res => res.json())
+        .then(json => resolve(json.map(r => ({label: r.label, value: r.id}))
+        .catch(resolve([]);
+    })
+  }
+}
+```
+
+* Radio Group
+```jsx
+'user_gender': {
+  component: 'radiogroup',
+  props: {
+    label: 'User Gender',
+    value: 'male'
+    options: [
+      {value: 'male',   label: 'Male'},
+      {value: 'female', label: 'Female'},
+      {value: 'unknow', label: 'Unknow'}
+    ]
+  }
+}
+// fetch remote data options
+'user_gender': {
+  component: 'radiogroup',
+  props: {
+    label: 'User Gender',
+    value: 'male'
+    options: () => new Promise(resolve => {
+      fetch('<rest api endpoint>')
+        .then(res => res.json())
+        .then(json => resolve(json.map(r => ({label: r.label, value: r.id}))
+        .catch(resolve([]);
+    })
+  }
+}
+```
+
 * Switch
 > props required: label
 ```jsx
@@ -284,11 +347,27 @@ const formFields = {
   'info': {
     component: 'info',
     props: {
-      skip: true,
       text: 'Tip: Use a non commercial email.'
-    }
+    },
+    options: {
+      skipFromModel: true
+    }    
   }  
 }
+```
+### Popule for a model
+```jsx
+const MyModel = {
+  user_name: 'Tom',
+  user_email: 'tom@email.com',
+  user_gener: 'male'
+}
+
+<JsonForm 
+  components={formFields} 
+  model={MyModel}
+  onSave={(data) => console.log(data)}
+/>
 ```
 
 ## License
