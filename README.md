@@ -10,7 +10,7 @@
 ## Install
 
 ```bash
-npm install --save jsonform
+$ npm i --save @aderbalnunes/react-jsonform
 ```
 
 ## Basic Usage
