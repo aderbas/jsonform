@@ -355,7 +355,7 @@ const formFields = {
   }  
 }
 ```
-### Popule for a model
+### Popule with a model
 ```jsx
 const MyModel = {
   user_name: 'Tom',
