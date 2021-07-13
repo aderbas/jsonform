@@ -13,8 +13,14 @@ const defaultOption = [{value: -1, label: 'Choice'}];
 
 class InputSelect extends React.PureComponent {
 
-  state = {
-    localOptions: [{value: -1, label: 'Loading...'}]
+  constructor(props){
+    super(props)
+    this.state = {
+      localOptions: [{
+        value: -1,
+        label: props.hint ?? 'Choice'
+      }]
+    }
   }
 
   async setOptions(){
