@@ -6,45 +6,48 @@
 */
 
 import React from "react"
-import Component from './components';
 import { Provider } from 'react-redux';
 import { Store } from './store';
-import {initialData,ControlButtons} from './util';
+import {initialData,ControlButtons,Column,Row} from './util';
 import {Grid} from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {changeField,changeData} from './actions';
 
+export {default as baseComponent} from './BaseComponent';
 
 // REDUX ##
 const mapStateToProps = store => ({formData: store.formState.formData});
 const mapDispatchToProps = dispatch => bindActionCreators({changeField,changeData}, dispatch);
 // ########
 
-/**
- * Container
- * @param {any} props
- */
-const Container = ({...props}) => {
-  const {field,formData,onChange} = props;
+const CustomGrid = ({...props}) => {
+  const {fields,...others} = props;
 
-  if(!field) return null;
+  return fields.map((f,ka) => {
+    if(Array.isArray(f)){
+      return <Row key={ka} fields={f} {...others} />
+    }else{
+      return <Column key={ka} field={f} {...others}  />
+    }
+  })
+}
 
-  /** Mount input components */
+const ConditionalRender = ({...props}) => {
+  const {id,name,title,controlOptions,loading, ...others} = props;
   return (
-    <React.Fragment>
-      {Object.keys(field).map((nodeName, key) => (
-        <div style={{padding: 6}} key={key}>
-          {Component({
-            node: field[nodeName], 
-            name: nodeName, 
-            value: formData[nodeName],
-            handlerChange: onChange
-          })}
-        </div>        
-      ))}
-    </React.Fragment>
+    <form id={id} name={name}>
+      <h4>{title}</h4>
+      <Grid container>
+        <CustomGrid {...others} />
+      </Grid>
+      <ControlButtons 
+        loading={loading}
+        {...others} 
+        {...controlOptions} />
+    </form>    
   )
 }
 
@@ -60,10 +63,11 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       this.state = {
         loading: false, 
         dependencies: [],
-        fields: !Array.isArray(props.components)?[props.components]:props.components
+        fields: props.components
+          ? ( !Array.isArray(props.components)?[props.components]:props.components )
+          : []
       }
     }
-
 
     componentDidMount(){
       this._mountDependecies();
@@ -130,7 +134,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
      */
     _onChange = (event) => {
       const {changeField,formChange} = this.props;
-      this._checkDependecy(event);
+      //this._checkDependecy(event);
       const value = event.target.type==='checkbox'?event.target.checked:event.target.value;
       const {target: { name }} = event;
       changeField(name, value);
@@ -159,41 +163,30 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
      * Mount dependencies list 
      */
     _mountDependecies = () => {
-      const {fields} = this.props;
-      // dependency array
-      if(fields){
-        let collection = {};
-        fields.forEach(it => collection = {...collection, ...it});
-        const deps = Object.keys(collection).filter(key => collection[key].props.dependency);
-        if(deps && deps.length > 0){
-          const dependencies = deps.map(name => collection[name].props.dependency);
-          this.setState({dependencies: dependencies});
-        }
-      }    
+      // const {fields} = this.state;
+      // // dependency array
+      // if(fields){
+      //   const collection = [];
+      //   const seeq = itens => {
+      //     itens.forEach(it => Array.isArray(it)?seeq(it):collection.push(it));
+      //   }
+      //   seeq(fields);
+      //   console.log(JSON.stringify(collection))
+      //   if(collection && collection.length > 0){
+      //     //const dependencies = collection.map(name => console.log(name));
+      //     //console.log(dependencies)
+      //     // this.setState({dependencies: dependencies});
+      //   }
+      // }    
     }    
     
     render(){
-      const {title,controlOptions, ...others} = this.props;
-      const {loading,fields} = this.state;
       return (
-        <form>
-          <h4>{title}</h4>
-          <Grid container>
-            {fields.map((row, k) => ((
-              <Grid item key={k} xs={12} lg md sm>
-                <Container
-                  onChange={this._onChange}
-                  field={row} 
-                  {...others}
-                />
-              </Grid>
-            )))}
-          </Grid>
-          <ControlButtons 
-            loading={loading}
-            {...others} 
-            {...controlOptions} />
-        </form>
+        <ConditionalRender 
+          onChange={this._onChange}
+          {...this.props}
+          {...this.state}
+        />
       );    
     }
   }
@@ -214,6 +207,13 @@ class JsonForm extends React.PureComponent {
       </Provider>
     )
   }
+}
+
+JsonForm.propTypes = {
+  components: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object
+  ])
 }
 
 export default JsonForm;

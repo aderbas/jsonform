@@ -6,15 +6,14 @@
  */
 import React from 'react';
 import ResponsiveControl from './elements/ResponsiveControl';
+import {connect} from 'react-redux';
 
-const initialOptions = {
-  padding: {
-    paddingTop: 1, 
-    paddingBottom: 1
-  }
-};
 
-const baseComponent = (options = initialOptions) => (Component) => {
+// REDUX ##
+const mapStateToProps = store => ({formdata: store.formState.formData});
+// ########
+
+const baseComponent = () => (Component) => {
 
   if(Component === undefined){
     throw new Error(
@@ -25,6 +24,8 @@ const baseComponent = (options = initialOptions) => (Component) => {
     );
   }
 
+  const ConnectedComponent = connect(mapStateToProps, null)(Component);
+
   const BaseComponent = React.forwardRef( (props, ref) => {
     const _props = {
       ...props,
@@ -32,7 +33,7 @@ const baseComponent = (options = initialOptions) => (Component) => {
 
     return (
       <ResponsiveControl>
-        <Component {..._props} />
+        <ConnectedComponent ref={ref} {..._props} />
       </ResponsiveControl>
     );
   });

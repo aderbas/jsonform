@@ -111,4 +111,4 @@ InputSelect.defaultProps = {
   width: 200
 }
 
-export default baseComponent(null)(InputSelect);
+export default baseComponent()(InputSelect);

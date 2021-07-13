@@ -8,6 +8,7 @@
 import React from 'react';
 import {Checkbox,Select,FormControl,MenuItem,InputLabel,Input,ListItemText} from '@material-ui/core';
 import PropTypes from 'prop-types';
+import baseComponent from '../../BaseComponent';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -133,4 +134,4 @@ MultiSelect.defaultProps = {
   width: 150
 }
 
-export default MultiSelect
+export default baseComponent()(MultiSelect)

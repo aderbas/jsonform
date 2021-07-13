@@ -32,7 +32,7 @@ class TextInput extends React.PureComponent {
   }
 
   render(){
-    const {id, dbClick, endAdornment, startAdornment, validation, ...rest} = this.props;
+    const {id, dbClick, endAdornment, startAdornment, validation, dispatch, ...rest} = this.props;
     const {error} = this.state;
     return (
       <TextField
@@ -46,7 +46,7 @@ class TextInput extends React.PureComponent {
           endAdornment: endAdornment?<InputAdornment>{endAdornment}</InputAdornment>:null,
           startAdornment: startAdornment?<InputAdornment>{startAdornment}</InputAdornment>:null
         }}
-        {...rest} 
+        {...rest}
       />
     )
   }
@@ -56,4 +56,4 @@ TextInput.propTypes = {
   label: PropTypes.string.isRequired,
 }
 
-export default baseComponent(null)(TextInput);
+export default baseComponent()(TextInput);

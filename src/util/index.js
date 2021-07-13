@@ -4,8 +4,13 @@
  * @since 28/10/2020
  */
 import React from 'react';
-import {Button,Box} from '@material-ui/core';
+import {Button,Box,Grid} from '@material-ui/core';
+import Component from '../components';
 
+/**
+ * Get default value for model
+ * @param {Object} props
+ */
 const defaultValue = props => {
   if(!props) return '';
   if(props.valueType){
@@ -42,6 +47,7 @@ export const initialData = (fields) => {
  */
 export const ControlButtons = ({...props}) => {
   const {onSave,onCancel,boxProps,saveText,cancelText} = props;
+  
   const _handlerClickSave = () => {
     const {formData} = props;
     if(typeof onSave === 'function'){
@@ -58,8 +64,64 @@ export const ControlButtons = ({...props}) => {
 
   return (
     <Box p={1} {...boxProps}>
-      {onCancel?<Button onClick={_handlerClickCancel}>{cancelText ?? 'Cancel'}</Button>:null}
-      {onSave?<Button onClick={_handlerClickSave} variant="contained" color="primary">{saveText ?? 'Save'}</Button>:null}
+      {onCancel
+        ? <Button onClick={_handlerClickCancel}>{cancelText ?? 'Cancel'}</Button>
+        : null
+      }
+      {onSave
+        ?<Button onClick={_handlerClickSave} variant="contained" color="primary">{saveText ?? 'Save'}</Button>
+        : null
+      }
     </Box>
   )
 }
+
+/**
+ * Container
+ * @param {any} props
+ */
+export const Container = ({...props}) => {
+  const {field,formData,onChange,spacing} = props;
+  /** Mount input components */
+  return (
+    <React.Fragment>
+      {Object.keys(field).map((nodeName, key) => (
+        <Box mt={spacing??2} key={key}>
+          {Component({
+            node: field[nodeName], 
+            name: nodeName, 
+            value: formData[nodeName],
+            handlerChange: onChange
+          })}
+        </Box>        
+      ))}
+    </React.Fragment>
+  )
+}
+
+/**
+ * Mount column 
+ * @param {Object} props
+ * @returns Element
+ */
+export const Column = ({field,...others}) => (
+  <Grid item xs={12} lg md sm>
+    <Container
+      field={field} 
+      {...others}
+    />
+  </Grid>
+)
+
+/**
+ * Mount row
+ * @param {object} props
+ * @return Element
+ */
+export const Row = ({fields, ...others}) => (
+  <Grid container>
+    {fields.map((field, k) => ((
+      <Column key={k} field={field} {...others} />
+    )))}    
+  </Grid>
+)
