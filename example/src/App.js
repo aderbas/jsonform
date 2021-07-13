@@ -1,7 +1,6 @@
 import React from 'react'
 
 import JsonForm from 'jsonform'
-import 'jsonform/dist/index.css'
 
 export const fetchList = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=5')
@@ -15,65 +14,101 @@ export const fetchList = () => new window.Promise(resolve => {
 const MyModel = {
   user_name: 'Tom',
   user_email: 'tom@email.com',
-  user_gener: 'male'
+  user_gender: 'male'
 }
 
-const formFields = [{
-  'user_name': {
-    component: 'text',
-    props: {
-      label: 'Name',
-    }
-  },
-  'user_email': {
-    component: 'text',
-    props: {
-      label: 'E-mail',
-    }
-  },
-  'info': {
-    component: 'info',
-    props: {
-      text: 'Tip: Use a non commercial email.'
+const formFields = [
+	[{
+    'user_name': {
+      component: 'text',
+      props: {
+        label: 'Name',
+      }
     },
-    options: {
-      skipFromModel: true
-    }    
-  },  
-  'user_gender': {
-    component: 'radiogroup',
-    props: {
-      label: '',
-      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'},{value: 'unknow', label: 'Unknow'}],
-      value: 'male'
+    'user_email': {
+      component: 'text',
+      props: {
+        label: 'E-mail',
+      }
     }
-  }  
-}, {
-  'user_password': {
-    component: 'text',
-    props: {
-      label: 'Password',
-      type: 'password'
-    }
-  },
-  'user_repassword': {
-    component: 'text',
-    props: {
-      label: 'Confirm password',
-      type: 'password',
+  }, {
+    'info': {
+      component: 'info',
+      props: {
+        text: 'Tip: Use a non commercial email.'
+      },
+      options: {
+        skipFromModel: true
+      }
     },
-    options: {
-      skipFromModel: true
+    'user_gender': {
+      component: 'radiogroup',
+      props: {
+        label: '',
+        options: [{
+          value: 'male',
+          label: 'Male'
+        }, {
+          value: 'female',
+          label: 'Female'
+        }, {
+          value: 'unknow',
+          label: 'Unknow'
+        }],
+        value: 'male'
+      }
     }
-  },
-  'user_type': {
-    component: 'multiselect',
-    props: {
-      label: 'Multi',
-      options: fetchList
-    }
-  },
-}]
+  }], [{
+		'user_password': {
+			component: 'text',
+			props: {
+				label: 'Password',
+				type: 'password'
+			}
+		},
+		'user_repassword': {
+			component: 'text',
+			props: {
+				label: 'Confirm password',
+				type: 'password',
+			},
+			options: {
+				skipFromModel: true
+			}
+		},
+		'user_type': {
+			component: 'multiselect',
+			props: {
+				label: 'Multi',
+				options: fetchList
+			}
+		},
+	}, {
+		'user_notes': {
+			component: 'text',
+			props: {
+				label: 'Notes',
+				multiline: true,
+				rows: 4
+			}
+		}
+	}]
+]
+
+// const simpleForm = {
+//   'user_name': {
+//     component: 'text',
+//     props: {
+//       label: 'Name',
+//     }
+//   },
+//   'user_email': {
+//     component: 'text',
+//     props: {
+//       label: 'E-mail',
+//     }
+//   }
+// }
 
 const App = () => {
   return (
