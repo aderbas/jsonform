@@ -125,3 +125,37 @@ export const Row = ({fields, ...others}) => (
     )))}    
   </Grid>
 )
+
+/**
+ * Check if any field of form depends from a another field
+ * @param {Object}
+ */
+export const seeqDependencies = ({fields, pushDependency}) => {
+  // dependency array
+  if(fields){
+    let collection = {};
+    const seeq = list => {
+      if(list.length > 0){
+        list.forEach(it => Array.isArray(it)?seeq(it):collection = {...collection, ...it})
+      }
+    }
+    seeq(fields);
+    const len = Object.keys(collection).length;
+    if(len > 0){
+      Object.keys(collection).forEach(c => {
+        if((collection[c]?.options?.depends)){
+          pushDependency(collection[c]?.options?.depends)
+        }
+      })
+    }
+  }
+}
+
+export const dispatchEvent = ({event,dependencies}) => {
+  const {target: {name,value}} = event;
+  if(name && dependencies.length > 0){
+    if(dependencies.filter(d => d === name)[0]){
+      document.dispatchEvent(new CustomEvent(`${name}_change`, {detail: value}));
+    }
+  }  
+}

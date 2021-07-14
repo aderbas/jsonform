@@ -73,7 +73,8 @@ const formFields = [
 				type: 'password',
 			},
 			options: {
-				skipFromModel: true
+				skipFromModel: true,
+        depends: 'user_password'
 			}
 		},
 		'user_type': {

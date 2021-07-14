@@ -8,19 +8,22 @@
 import React from "react"
 import { Provider } from 'react-redux';
 import { Store } from './store';
-import {initialData,ControlButtons,Column,Row} from './util';
+import {initialData,ControlButtons,Column,Row,seeqDependencies,dispatchEvent} from './util';
 import {Grid} from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {changeField,changeData} from './actions';
+import {changeField,changeData,pushDependency} from './actions';
 
 export {default as baseComponent} from './BaseComponent';
 
 // REDUX ##
-const mapStateToProps = store => ({formData: store.formState.formData});
-const mapDispatchToProps = dispatch => bindActionCreators({changeField,changeData}, dispatch);
+const mapStateToProps = store => ({
+  formData: store.formState.formData, 
+  dependencies: store.globalState.dependencies
+});
+const mapDispatchToProps = dispatch => bindActionCreators({changeField,changeData,pushDependency}, dispatch);
 // ########
 
 const CustomGrid = ({...props}) => {
@@ -62,7 +65,6 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       super(props);
       this.state = {
         loading: false, 
-        dependencies: [],
         fields: props.components
           ? ( !Array.isArray(props.components)?[props.components]:props.components )
           : []
@@ -84,7 +86,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       if(nextProps.components){
         if(JSON.stringify(components) !== JSON.stringify(nextProps.components)){
           this._getDataForm();
-          this.updateExternalValues();
+          this._updateExternalValues();
         }
       }
     }
@@ -92,7 +94,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
     /**
      * When an input is updated by a external source, send to the internal redux.
      */ 
-    updateExternalValues(){
+    _updateExternalValues(){
       const {changeField} = this.props;
       const {fields} = this.state;
       let collection = {};
@@ -134,7 +136,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
      */
     _onChange = (event) => {
       const {changeField,formChange} = this.props;
-      //this._checkDependecy(event);
+      this._checkDependecy(event);
       const value = event.target.type==='checkbox'?event.target.checked:event.target.value;
       const {target: { name }} = event;
       changeField(name, value);
@@ -150,34 +152,17 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
      * @param {object} event
      */
     _checkDependecy = (event) => {
-      const {target} = event;
-      const {dependencies} = this.state;
-      if(target.name && dependencies.length > 0){
-        if(dependencies.filter(d => d === target.name)[0]){
-          document.dispatchEvent(new CustomEvent(`${target.name}_change`, {detail: target.value}));
-        }
-      }
+      const {dependencies} = this.props;
+      dispatchEvent({event, dependencies});
     }     
 
     /** 
      * Mount dependencies list 
      */
     _mountDependecies = () => {
-      // const {fields} = this.state;
-      // // dependency array
-      // if(fields){
-      //   const collection = [];
-      //   const seeq = itens => {
-      //     itens.forEach(it => Array.isArray(it)?seeq(it):collection.push(it));
-      //   }
-      //   seeq(fields);
-      //   console.log(JSON.stringify(collection))
-      //   if(collection && collection.length > 0){
-      //     //const dependencies = collection.map(name => console.log(name));
-      //     //console.log(dependencies)
-      //     // this.setState({dependencies: dependencies});
-      //   }
-      // }    
+      const {fields} = this.state;
+      const {pushDependency} = this.props;
+      seeqDependencies({fields, pushDependency});
     }    
     
     render(){

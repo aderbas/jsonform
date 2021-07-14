@@ -18,7 +18,7 @@ const baseComponent = () => (Component) => {
   if(Component === undefined){
     throw new Error(
       [
-        'You are calling baseComponent(options)(Component) with an undefined component.',
+        'You are calling baseComponent()(Component) with an undefined component.',
         'You may have forgotten to import it.',
       ].join('\n')
     );
