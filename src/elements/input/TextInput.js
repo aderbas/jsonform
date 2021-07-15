@@ -7,12 +7,17 @@
 import React from "react"
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
+import {enabledInput} from '../../util';
 import {TextField,InputAdornment} from '@material-ui/core';
 
 class TextInput extends React.PureComponent {
 
-  state = {
-    error: false
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: false,
+      disabled: Boolean(props.dependency),
+    }
   }
 
   _validate = (e) => {
@@ -31,9 +36,29 @@ class TextInput extends React.PureComponent {
     this.setState({error: (e.target.value === '' && required)});
   }
 
+  componentDidMount(){
+    const {dependency} = this.props;
+    if(dependency){
+      document.addEventListener(`${dependency}_change`, this.dependencyChanged.bind(this));
+    }
+  }
+
+  componentWillUnmount(){
+    const {dependency} = this.props;
+    if(dependency){
+      // remove listener
+      document.removeEventListener(`${dependency}_change`, this.dependencyChanged);
+    }    
+  }
+
+  dependencyChanged(event){
+    const {detail} = event;
+    this.setState({disabled: enabledInput(detail)});
+  }
+
   render(){
-    const {id, dbClick, endAdornment, startAdornment, validation, dispatch, ...rest} = this.props;
-    const {error} = this.state;
+    const {id,dbClick,endAdornment,startAdornment,validation,dispatch, ...rest} = this.props;
+    const {error,disabled} = this.state;
     return (
       <TextField
         id={id}
@@ -46,6 +71,7 @@ class TextInput extends React.PureComponent {
           endAdornment: endAdornment?<InputAdornment>{endAdornment}</InputAdornment>:null,
           startAdornment: startAdornment?<InputAdornment>{startAdornment}</InputAdornment>:null
         }}
+        disabled={disabled}
         {...rest}
       />
     )

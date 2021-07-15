@@ -23,6 +23,7 @@ const formFields = [
       component: 'text',
       props: {
         label: 'Name',
+        required: true
       }
     },
     'user_email': {
@@ -78,12 +79,23 @@ const formFields = [
 			}
 		},
 		'user_type': {
-			component: 'multiselect',
+			component: 'select',
 			props: {
-				label: 'Multi',
+				label: 'Select',
+        hint: 'Select Type',
 				options: fetchList
 			}
 		},
+    'user_names': {
+      component: 'select',
+      props: {
+        label: 'Names',
+        options: fetchList
+      },
+      options: {
+        depends: 'user_type'
+      }
+    }
 	}, {
 		'user_notes': {
 			component: 'text',

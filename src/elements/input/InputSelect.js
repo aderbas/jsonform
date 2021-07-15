@@ -8,8 +8,11 @@ import {InputLabel,Select} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 
-// default value
-const defaultOption = [{value: -1, label: 'Choice'}];
+const Option = ({value, label}) => (
+  <option value={value}>
+    {label}
+  </option>
+)
 
 class InputSelect extends React.PureComponent {
 
@@ -18,9 +21,11 @@ class InputSelect extends React.PureComponent {
     this.state = {
       localOptions: [{
         value: -1,
-        label: props.hint ?? 'Choice'
-      }]
+        label: props.hint ?? ''
+      }],
+      disabled: Boolean(props.dependency)
     }
+    this.defaultOption = [{value: -1, label: props.hint ?? ''}]
   }
 
   async setOptions(){
@@ -30,13 +35,13 @@ class InputSelect extends React.PureComponent {
         try{
           const data = await options();
           if(this._isMounted){
-            this.setState({localOptions: [...defaultOption, ...data]});
+            this.setState({localOptions: [...this.defaultOption, ...data]});
           }
         }catch(err){
           this.setState(state => ({localOptions: [...state.localOptions]}));
         }
       }else{
-        this.setState({localOptions: [{value: -1, label: 'Escolha'}]});
+        this.setState({localOptions: this.defaultOption});
         document.addEventListener(`${dependency}_change`, this.dependencyChanged);
       }
     }else{
@@ -52,15 +57,15 @@ class InputSelect extends React.PureComponent {
   dependencyChanged = async(event) => {
     const {options} = this.props;
     const {detail} = event;
+    this.setState({disabled: false})
     if(detail && typeof options === 'function'){
       try{
-        this.setState({localOptions: [{value: -1, label: 'Loading...'}]});
-        const data = await options(detail);
+        const data = await options(detail?.value);
         if(this._isMounted){
-          this.setState({localOptions: [...defaultOption, ...data]});
+          this.setState({localOptions: [...this.defaultOption, ...data]});
         }        
       }catch(err){
-        this.setState({localOptions: defaultOption});
+        this.setState({localOptions: this.defaultOption});
       }    
     }
   }
@@ -75,7 +80,7 @@ class InputSelect extends React.PureComponent {
   }
 
   render() {
-    const {localOptions} = this.state;
+    const {localOptions,disabled} = this.state;
     const {value,id,onChange,label,width,required} = this.props;
     return (
       <React.Fragment>
@@ -89,12 +94,13 @@ class InputSelect extends React.PureComponent {
             'aria-label': id,
             style: width?{width: width}:null
           }}
+          disabled={disabled}
           onChange={onChange}
         >
           {localOptions.map((opt, key) => (
-            <option key={key} value={opt.value?opt.value:opt.label}>
-              {opt.label}
-            </option>
+            <Option key={key} 
+              value={opt.value?opt.value:opt.label} 
+              label={opt.label} />
           ))}
         </Select>
       </React.Fragment>

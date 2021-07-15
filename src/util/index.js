@@ -91,7 +91,7 @@ export const Container = ({...props}) => {
             node: field[nodeName], 
             name: nodeName, 
             value: formData[nodeName],
-            handlerChange: onChange
+            handlerChange: onChange,
           })}
         </Box>        
       ))}
@@ -152,10 +152,28 @@ export const seeqDependencies = ({fields, pushDependency}) => {
 }
 
 export const dispatchEvent = ({event,dependencies}) => {
-  const {target: {name,value}} = event;
+  const {target: {name,value,type}} = event;
   if(name && dependencies.length > 0){
     if(dependencies.filter(d => d === name)[0]){
-      document.dispatchEvent(new CustomEvent(`${name}_change`, {detail: value}));
+      document.dispatchEvent(new CustomEvent(`${name}_change`, {detail: {
+        value: value,
+        type: type
+      }}));
     }
   }  
+}
+
+export const enabledInput = event => {
+  if(event.value){
+    switch(event.type){
+      case 'password':
+      case 'text':
+      case 'date':
+        return (event.value.length <= 0)
+      case 'checkbox':
+        return event.value;
+      default: return false;
+    }
+  }
+  return false;
 }

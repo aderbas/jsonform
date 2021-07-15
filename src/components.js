@@ -33,12 +33,13 @@ const failComponent = () => React.createElement(
 export default ({...props}) => {
   const {node, name, value, handlerChange} = props;
   if(!node.props) node.props = {};
-
+  
   const _props = {
     ...node.props,
     id: name,
     value: value?value:'',
     onChange: handlerChange,
+    dependency: node?.options?.depends
   }
   if(typeof node.component !== 'undefined'){
 
