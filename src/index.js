@@ -137,7 +137,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
     _onChange = (event) => {
       const {changeField,formChange} = this.props;
       this._checkDependecy(event);
-      const value = event.target.type==='checkbox'?event.target.checked:event.target.value;
+      const value = (event.target.type==='checkbox')?Boolean(event.target.checked):event.target.value;
       const {target: { name }} = event;
       changeField(name, value);
       // send to parent if exist handler

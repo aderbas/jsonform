@@ -6,12 +6,29 @@
 import React from 'react';
 import {Button,Box,Grid} from '@material-ui/core';
 import Component from '../components';
+import * as Elements from '../elements';
+
+/**
+ * Default component list
+ * @type {Objetc}
+ */
+export const componentList = {
+  text        : Elements.TextInput,
+  info        : Elements.Info,
+  select      : Elements.InputSelect,
+  multiselect : Elements.MultiSelect,
+  divider     : Elements.Separator,
+  switch      : Elements.InputSwitch,
+  upload      : Elements.UploadBox,
+  radiogroup  : Elements.InputRadioGroup,
+};
 
 /**
  * Get default value for model
- * @param {Object} props
+ * @param {Object} node
  */
-const defaultValue = props => {
+const defaultValue = node => {
+  const {props} = node;
   if(!props) return '';
   if(props.valueType){
     switch(props.valueType){
@@ -23,7 +40,16 @@ const defaultValue = props => {
       case 'date': return new Date();
       default: return '';
     }
-  }else return '';
+  }else{
+    switch(node.component){
+      case componentList.info:
+      case componentList.text: return '';
+      case componentList.select: return -1;
+      case componentList.multiselect: return [];
+      case componentList.switch: return false;
+      default: return '';
+    }
+  };
 }
 
 /**
@@ -35,7 +61,7 @@ export const initialData = (fields) => {
   Object.keys(fields).forEach(k => {  
     if(fields[k].props){
       if(fields[k].options && fields[k].options.skipFromModel) return;
-      data[k] = fields[k].props.value?fields[k].props.value:defaultValue(fields[k].props)
+      data[k] = fields[k]?.props.value?fields[k].props.value:defaultValue(fields[k])
     }
   });
   return data;
@@ -152,8 +178,9 @@ export const seeqDependencies = ({fields, pushDependency}) => {
 }
 
 export const dispatchEvent = ({event,dependencies}) => {
-  const {target: {name,value,type}} = event;
+  const {target: {name,type,checked}} = event;
   if(name && dependencies.length > 0){
+    const value = (type==='checkbox')?Boolean(checked):event.target.value;
     if(dependencies.filter(d => d === name)[0]){
       document.dispatchEvent(new CustomEvent(`${name}_change`, {detail: {
         value: value,
@@ -164,16 +191,15 @@ export const dispatchEvent = ({event,dependencies}) => {
 }
 
 export const enabledInput = event => {
-  if(event.value){
-    switch(event.type){
-      case 'password':
-      case 'text':
-      case 'date':
-        return (event.value.length <= 0)
-      case 'checkbox':
-        return event.value;
-      default: return false;
-    }
+  switch(event.type){
+    case 'password':
+    case 'text':
+    case 'date':
+      return (event.value.length <= 0)
+    case "checkbox":
+      return !(event.value);
+    case "select-one":
+      return (parseInt(event.value) < 0);
+    default: return false;
   }
-  return false;
 }

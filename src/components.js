@@ -5,19 +5,7 @@
 *
 */
 import React from 'react';
-import * as Elements from './elements';
-
-// list
-const Components = {
-  text        : Elements.TextInput,
-  info        : Elements.Info,
-  select      : Elements.InputSelect,
-  multiselect : Elements.MultiSelect,
-  divider     : Elements.Separator,
-  switch      : Elements.InputSwitch,
-  upload      : Elements.UploadBox,
-  radiogroup  : Elements.InputRadioGroup,
-};
+import { componentList } from './util';
 
 /**
  * Component fail
@@ -45,7 +33,7 @@ export default ({...props}) => {
 
     // check node component
     if(typeof node.component === 'string'){
-      const _component = Components[node.component];
+      const _component = componentList[node.component];
       if(!_component) return failComponent();
 
       return React.createElement(_component, _props);

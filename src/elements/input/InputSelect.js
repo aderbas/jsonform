@@ -45,6 +45,7 @@ class InputSelect extends React.PureComponent {
         document.addEventListener(`${dependency}_change`, this.dependencyChanged);
       }
     }else{
+      document.addEventListener(`${dependency}_change`, this.dependencyChanged);
       this.setState(state => ({...state, localOptions: [...state.localOptions, ...options]}))
     }
   }
@@ -57,15 +58,17 @@ class InputSelect extends React.PureComponent {
   dependencyChanged = async(event) => {
     const {options} = this.props;
     const {detail} = event;
-    this.setState({disabled: false})
+    if(typeof detail?.value === 'boolean'){
+      this.setState({disabled: !(detail?.value)})
+    }
     if(detail && typeof options === 'function'){
       try{
         const data = await options(detail?.value);
         if(this._isMounted){
-          this.setState({localOptions: [...this.defaultOption, ...data]});
+          this.setState({localOptions: [...this.defaultOption, ...data], disabled: false});
         }        
       }catch(err){
-        this.setState({localOptions: this.defaultOption});
+        this.setState({localOptions: this.defaultOption, disabled: true});
       }    
     }
   }
