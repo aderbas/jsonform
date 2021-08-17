@@ -110,7 +110,7 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
      * Get data for popule form if parent function exist
      */
     _getDataForm(){
-      const {fetchData,changeData,fetchParams,model} = this.props;
+      const {fetchData,changeData,fetchParams,model,...others} = this.props;
       const {fields} = this.state;
       let collection = {};
       fields.forEach(it => collection = {...collection, ...it});
@@ -118,8 +118,14 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
         this.setState({loading: true});
         (fetchParams?fetchData(...fetchParams):fetchData())
           .then(res => { 
-            this.setState({loading: false});
-            changeData(res.data);
+            if(res && typeof res !== 'undefined'){
+              const {fetchDataHandler} = others;
+              this.setState({loading: false});
+              changeData(res.data || res);
+              if(typeof fetchDataHandler === 'function'){
+                fetchDataHandler(res);
+              }
+            }
           })
           .catch(() => {
             this.setState({loading: false});
