@@ -1,7 +1,6 @@
 import React from 'react'
 
 import JsonForm from 'jsonform'
-import 'jsonform/dist/index.css'
 
 export const fetchList = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=5')
@@ -12,78 +11,51 @@ export const fetchList = () => new window.Promise(resolve => {
     .catch(() => resolve([]));
 });
 
-const MyModel = {
-  user_name: 'Tom',
-  user_email: 'tom@email.com',
-  user_gener: 'male'
-}
 
-const formFields = [{
+const simpleForm = {
   'user_name': {
     component: 'text',
     props: {
       label: 'Name',
     }
   },
-  'user_email': {
+	'user_enabled': {
+		component: 'switch',
+		props: {
+			label: 'Block',
+		},
+		options: {
+			skipFromModel: true
+		}
+	},
+  'user_obs': {
     component: 'text',
-    props: {
-      label: 'E-mail',
-    }
+		props: {
+			label: 'Block OBS',
+			multiline: true,
+			rows: 4
+		},
   },
-  'info': {
-    component: 'info',
-    props: {
-      text: 'Tip: Use a non commercial email.'
-    },
-    options: {
-      skipFromModel: true
-    }    
-  },  
-  'user_gender': {
-    component: 'radiogroup',
-    props: {
-      label: '',
-      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'},{value: 'unknow', label: 'Unknow'}],
-      value: 'male'
-    }
-  }  
-}, {
-  'user_password': {
-    component: 'text',
-    props: {
-      label: 'Password',
-      type: 'password'
-    }
-  },
-  'user_repassword': {
-    component: 'text',
-    props: {
-      label: 'Confirm password',
-      type: 'password',
-    },
-    options: {
-      skipFromModel: true
-    }
-  },
-  'user_type': {
-    component: 'multiselect',
-    props: {
-      label: 'Multi',
-      options: fetchList
-    }
-  },
-}]
+	'user_type': {
+		component: 'select',
+		props: {
+			label: 'Type',
+			options: [{value: 1, label: 'Default'}, {value: 2, label: 'Admin'}]
+		},
+		options: {
+			depends: 'user_enabled'
+		}		
+	},	
+}
 
 const App = () => {
   return (
     <JsonForm 
       title="My Form"
-      components={formFields} 
+      components={simpleForm}
       controlOptions={{
         saveText: 'Save Form'
       }}
-      model={MyModel}
       onSave={(data) => console.log(data)}
     />
   )

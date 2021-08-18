@@ -1,6 +1,6 @@
 {
   "name": "@aderbalnunes/react-jsonform",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Create Form from a custom JSON",
   "author": "Aderbal Nunes aderbalnunes@gmail.com",
   "license": "MIT",
@@ -27,8 +27,8 @@
     "@material-ui/core": "^4.11.2",
     "prop-types": "^15.5.4",
     "react": "^17.0.2",
-    "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.0"
   },
   "devDependencies": {
     "@material-ui/core": "^4.11.2",

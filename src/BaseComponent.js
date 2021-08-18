@@ -6,24 +6,25 @@
  */
 import React from 'react';
 import ResponsiveControl from './elements/ResponsiveControl';
+import {connect} from 'react-redux';
 
-const initialOptions = {
-  padding: {
-    paddingTop: 1, 
-    paddingBottom: 1
-  }
-};
 
-const baseComponent = (options = initialOptions) => (Component) => {
+// REDUX ##
+const mapStateToProps = store => ({formdata: store.formState.formData});
+// ########
+
+const baseComponent = () => (Component) => {
 
   if(Component === undefined){
     throw new Error(
       [
-        'You are calling baseComponent(options)(Component) with an undefined component.',
+        'You are calling baseComponent()(Component) with an undefined component.',
         'You may have forgotten to import it.',
       ].join('\n')
     );
   }
+
+  const ConnectedComponent = connect(mapStateToProps, null)(Component);
 
   const BaseComponent = React.forwardRef( (props, ref) => {
     const _props = {
@@ -32,7 +33,7 @@ const baseComponent = (options = initialOptions) => (Component) => {
 
     return (
       <ResponsiveControl>
-        <Component {..._props} />
+        <ConnectedComponent ref={ref} {..._props} />
       </ResponsiveControl>
     );
   });

@@ -5,19 +5,7 @@
 *
 */
 import React from 'react';
-import * as Elements from './elements';
-
-// list
-const Components = {
-  text        : Elements.TextInput,
-  info        : Elements.Info,
-  select      : Elements.InputSelect,
-  multiselect : Elements.MultiSelect,
-  divider     : Elements.Separator,
-  switch      : Elements.InputSwitch,
-  upload      : Elements.UploadBox,
-  radiogroup  : Elements.InputRadioGroup,
-};
+import { componentList } from './util';
 
 /**
  * Component fail
@@ -33,18 +21,19 @@ const failComponent = () => React.createElement(
 export default ({...props}) => {
   const {node, name, value, handlerChange} = props;
   if(!node.props) node.props = {};
-
+  
   const _props = {
     ...node.props,
     id: name,
     value: value?value:'',
     onChange: handlerChange,
+    dependency: node?.options?.depends
   }
   if(typeof node.component !== 'undefined'){
 
     // check node component
     if(typeof node.component === 'string'){
-      const _component = Components[node.component];
+      const _component = componentList[node.component];
       if(!_component) return failComponent();
 
       return React.createElement(_component, _props);

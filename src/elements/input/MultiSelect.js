@@ -8,6 +8,7 @@
 import React from 'react';
 import {Checkbox,Select,FormControl,MenuItem,InputLabel,Input,ListItemText} from '@material-ui/core';
 import PropTypes from 'prop-types';
+import baseComponent from '../../BaseComponent';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,7 +27,7 @@ const MenuProps = {
  * @returns Element
  */
 const ConditionalRender = ({...props}) => {
-  const {id,value,label,width,internalOptions,selectChange,getLabel} = props;
+  const {id,value,label,width,internalOptions,selectChange,getLabel,disabled} = props;
 
   return (
     <FormControl style={{ width }}>
@@ -40,6 +41,7 @@ const ConditionalRender = ({...props}) => {
         multiple
         renderValue={(selected) => getLabel(selected)}
         value={value||[]}
+        disabled={disabled}
       >
         {internalOptions.map((v,k) => (
           <MenuItem key={k} value={v.value}>
@@ -57,8 +59,12 @@ const ConditionalRender = ({...props}) => {
  */
 class MultiSelect extends React.PureComponent {
 
-  state = {
-    internalOptions: []
+  constructor(props) {
+    super(props);
+    this.state = {
+      internalOptions: [],
+      disabled: Boolean(props.dependency)
+    }
   }
 
   /**
@@ -89,14 +95,14 @@ class MultiSelect extends React.PureComponent {
   /**
    * Set Options 
    */
-  async setOptions(){
+  async setOptions(param){
     try{
       const {options} = this.props;
       if(typeof options === 'function'){
-        const data = await options();
-        this.setState({internalOptions: data});
+        const data = await options(param);
+        this.setState({internalOptions: data, disabled: false});
       }else{
-        this.setState({internalOptions: options});
+        this.setState({internalOptions: options, disabled: false});
       }
     }catch(err){
       this.setState({internalOptions: []});
@@ -104,8 +110,32 @@ class MultiSelect extends React.PureComponent {
   }
 
   componentDidMount(){
+    const {dependency} = this.props;
+    if(dependency){
+      document.addEventListener(`${dependency}_change`, this.dependencyChanged);
+    }
     this.setOptions();
   }
+
+  componentWillUnmount(){
+    const {dependency} = this.props;
+    this._isMounted = false;
+    if(dependency){
+      // remove listener
+      document.removeEventListener(`${dependency}_change`, this.dependencyChanged);
+    }
+  }
+
+  dependencyChanged = async(event) => {
+    const {options} = this.props;
+    const {detail} = event;
+    if(typeof detail?.value === 'boolean'){
+      this.setState({disabled: !(detail?.value)})
+    }
+    if(detail && typeof options === 'function'){
+      this.setOptions(detail?.value);
+    }
+  }  
 
   render() {
     return (
@@ -133,4 +163,4 @@ MultiSelect.defaultProps = {
   width: 150
 }
 
-export default MultiSelect
+export default baseComponent()(MultiSelect)

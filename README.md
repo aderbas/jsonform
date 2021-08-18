@@ -217,13 +217,15 @@ const formFields = {
   component: 'select',
   props: {
     label: 'User Profile',
-    depends: 'user_level',
     options: level => new Promise(resolve => {
       fetch(`<rest api endpoint>/${level}`)
         .then(res => res.json())
         .then(json => resolve(json.map(r => ({label: r.profile, value: r.id}))
         .catch(resolve([]);
     })
+  },
+  options: {
+    depends: 'user_level'
   }
 }
 ```

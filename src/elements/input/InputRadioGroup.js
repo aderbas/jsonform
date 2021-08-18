@@ -8,6 +8,7 @@
 import React from 'react';
 import {FormLabel,RadioGroup,FormControlLabel,Radio} from '@material-ui/core';
 import PropTypes from 'prop-types';
+import baseComponent from '../../BaseComponent';
 
 const RenderRadios = ({ options }) => {
   return options && options.map((opt,k) => (
@@ -66,4 +67,4 @@ InputRadioGroup.propTypes = {
   options: PropTypes.any
 }
 
-export default InputRadioGroup;
+export default baseComponent()(InputRadioGroup)
