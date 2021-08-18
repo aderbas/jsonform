@@ -45,16 +45,6 @@ const simpleForm = {
 		options: {
 			depends: 'user_enabled'
 		}		
-	},
-	'user_dependent': {
-		component: 'multiselect',
-		props: {
-			label: 'Dependent',
-			options: fetchList
-		},
-		options: {
-			depends: 'user_type'
-		}		
 	},	
 }
 
@@ -62,7 +52,7 @@ const App = () => {
   return (
     <JsonForm 
       title="My Form"
-      components={simpleForm} 
+      components={simpleForm}
       controlOptions={{
         saveText: 'Save Form'
       }}

@@ -60,7 +60,7 @@ export const initialData = (fields) => {
   let data = {};
   Object.keys(fields).forEach(k => {  
     if(fields[k].props){
-      if(fields[k].options && fields[k].options.skipFromModel) return;
+      if(fields[k]?.options?.skipFromModel) return;
       data[k] = fields[k]?.props.value?fields[k].props.value:defaultValue(fields[k])
     }
   });
