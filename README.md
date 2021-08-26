@@ -324,7 +324,10 @@ const formFields = {
   components={formFields} 
   controlOptions={{
     saveText: 'Save Form',
-    cancelText: 'Cancel'
+    cancelText: 'Cancel',
+    boxProps: {
+      textAlign: 'right'
+    }
   }}
   onSave={(data) => console.log(data)}
 />
