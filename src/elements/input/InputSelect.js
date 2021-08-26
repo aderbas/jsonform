@@ -102,8 +102,8 @@ class InputSelect extends React.PureComponent {
         >
           {localOptions.map((opt, key) => (
             <Option key={key} 
-              value={opt.value?opt.value:opt.label} 
-              label={opt.label} />
+              value={opt.value ?? opt.label} 
+              label={opt.label ?? '--'} />
           ))}
         </Select>
       </React.Fragment>

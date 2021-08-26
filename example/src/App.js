@@ -13,38 +13,12 @@ export const fetchList = () => new window.Promise(resolve => {
 
 
 const simpleForm = {
-  'user_name': {
-    component: 'text',
-    props: {
-      label: 'Name',
-    }
-  },
-	'user_enabled': {
-		component: 'switch',
-		props: {
-			label: 'Block',
-		},
-		options: {
-			skipFromModel: true
-		}
-	},
-  'user_obs': {
-    component: 'text',
-		props: {
-			label: 'Block OBS',
-			multiline: true,
-			rows: 4
-		},
-  },
 	'user_type': {
 		component: 'select',
 		props: {
 			label: 'Type',
-			options: [{value: 1, label: 'Default'}, {value: 2, label: 'Admin'}]
+			options: [{value: 0, label: 'Default'}, {value: 2, label: 'Admin'}]
 		},
-		options: {
-			depends: 'user_enabled'
-		}		
 	},	
 }
 
@@ -54,7 +28,10 @@ const App = () => {
       title="My Form"
       components={simpleForm}
       controlOptions={{
-        saveText: 'Save Form'
+        saveText: 'Save Form',
+        boxProps: {
+          textAlign: 'right'
+        }
       }}
       onSave={(data) => console.log(data)}
     />
