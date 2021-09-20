@@ -7,6 +7,7 @@ import React from 'react';
 import {InputLabel,Select} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
+import {toggleSelect} from '../../util';
 
 const Option = ({value, label}) => (
   <option value={value}>
@@ -30,24 +31,23 @@ class InputSelect extends React.PureComponent {
 
   async setOptions(){
     const {options,dependency} = this.props;
-    if(typeof options === 'function' && this._isMounted){
-      if(!dependency){
+    if(!dependency){
+      if(typeof options === 'function'){
         try{
           const data = await options();
           if(this._isMounted){
             this.setState({localOptions: [...this.defaultOption, ...data]});
           }
         }catch(err){
-          this.setState(state => ({localOptions: [...state.localOptions]}));
+          this.setState(state => ({localOptions: [...this.defaultOption]}));
         }
       }else{
-        this.setState({localOptions: this.defaultOption});
-        document.addEventListener(`${dependency}_change`, this.dependencyChanged);
+        this.setState({localOptions: [...this.defaultOption, ...options]});
       }
     }else{
       document.addEventListener(`${dependency}_change`, this.dependencyChanged);
-      this.setState(state => ({...state, localOptions: [...state.localOptions, ...options]}))
-    }
+      this.setState({localOptions: this.defaultOption});
+    }  
   }
 
   componentDidMount(){
@@ -57,20 +57,11 @@ class InputSelect extends React.PureComponent {
 
   dependencyChanged = async(event) => {
     const {options} = this.props;
-    const {detail} = event;
-    if(typeof detail?.value === 'boolean'){
-      this.setState({disabled: !(detail?.value)})
-    }
-    if(detail && typeof options === 'function'){
-      try{
-        const data = await options(detail?.value);
-        if(this._isMounted){
-          this.setState({localOptions: [...this.defaultOption, ...data], disabled: false});
-        }        
-      }catch(err){
-        this.setState({localOptions: this.defaultOption, disabled: true});
-      }    
-    }
+    const applyRule = await toggleSelect(event,options);
+    this.setState({
+      localOptions: [...this.defaultOption, ...applyRule.data], 
+      disabled: applyRule.disabled
+    });
   }
 
   componentWillUnmount(){
@@ -79,6 +70,13 @@ class InputSelect extends React.PureComponent {
     if(dependency){
       // remove listener
       document.removeEventListener(`${dependency}_change`, this.dependencyChanged);
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.value === '' && this.props.value !== ''){
+      const {onChange, id} = this.props;
+      onChange({target: {name: id, value: this.props.value}});
     }
   }
 

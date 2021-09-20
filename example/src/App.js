@@ -2,6 +2,8 @@ import React from 'react'
 
 import JsonForm from 'jsonform'
 
+const RE_EMAIL = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
 export const fetchList = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=5')
     .then(res => res.json())
@@ -11,15 +13,40 @@ export const fetchList = () => new window.Promise(resolve => {
     .catch(() => resolve([]));
 });
 
+export const fetchObject = () => new window.Promise(resolve => {
+  fetch('https://api.randomuser.me/?results=1')
+    .then(res => res.json())
+    .then(json => resolve(json.results[0]))
+    .catch(() => resolve([]));
+});
 
 const simpleForm = {
-	'user_type': {
-		component: 'select',
+	// 'gender': {
+	// 	component: 'text',
+	// 	props: {
+	// 		label: 'Gender',
+	// 	},
+	// }, 
+  'email': {
+		component: 'text',
 		props: {
-			label: 'Type',
-			options: [{value: 0, label: 'Default'}, {value: 2, label: 'Admin'}]
-		},
-	},	
+			label: 'Email',
+		}  
+  },
+  'gender': {
+    component: 'radiogroup',
+    props: {
+      label: 'Gender',
+      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'}],
+    },
+    options: {
+      depends: {
+        rules: [
+          {field: 'email', regex: RE_EMAIL}
+        ]
+      }
+    }    
+  }  
 }
 
 const App = () => {
@@ -33,6 +60,7 @@ const App = () => {
           textAlign: 'right'
         }
       }}
+      fetchData={fetchObject}
       onSave={(data) => console.log(data)}
     />
   )

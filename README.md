@@ -210,25 +210,6 @@ const formFields = {
   }
 }
 ```
-```jsx
-// dependency
-// fetch remote data based on value selected in other select
-'user_profile': {
-  component: 'select',
-  props: {
-    label: 'User Profile',
-    options: level => new Promise(resolve => {
-      fetch(`<rest api endpoint>/${level}`)
-        .then(res => res.json())
-        .then(json => resolve(json.map(r => ({label: r.profile, value: r.id}))
-        .catch(resolve([]);
-    })
-  },
-  options: {
-    depends: 'user_level'
-  }
-}
-```
 * Multiselect
 > props required: label and options
 ```jsx
@@ -261,7 +242,6 @@ const formFields = {
   }
 }
 ```
-
 * Radio Group
 ```jsx
 'user_gender': {
@@ -360,6 +340,90 @@ const formFields = {
   }  
 }
 ```
+### Field dependency
+* For select/multiselect
+```jsx
+const formFields = {
+  'user_has_domain': {
+    component: 'switch',
+    props: {
+      label: 'Use domain',
+      value: true,
+    }
+  },
+  // without rule
+  'user_domain': {
+    component: 'select',
+    props: {
+      label: 'Type',
+      options: [...]
+    },
+    options: {
+      depends: 'user_has_domain'
+    }
+  }
+  // with rule. E.g: disabled if selected 'user_domain' value is 2.
+  // suported conditions: eq|ne|gt|lt|le|ge
+  'user_type': {
+    component: 'select',
+    props: {
+      label: 'Type',
+      options: [...]
+    },
+    options: {
+      depends: {
+        rules: [
+          {field: 'user_domain', condition: 'eq', value: 2}
+        ]
+      }
+    }    
+  },  
+}
+```
+* For input text
+```jsx
+const formFields = {
+  'user_password': {
+    component: 'text',
+    props: {
+      label: 'Password',
+      type: 'password'
+    },
+  },
+  // with rule length for input text
+  // suported conditions: eq|ne|gt|lt|le|ge
+  'user_repassword': {
+    component: 'text',
+    props: {
+      label: 'Confirm password',
+      type: 'password'
+    },
+    options: {
+      depends: {
+        rules: [
+          {field: 'user_password', condition: 'ge', length: 6}
+        ]
+      }
+    }
+  },
+  // with regex. Disable If the regex result exists 
+  'user_repassword': {
+    component: 'text',
+    props: {
+      label: 'Confirm password',
+      type: 'password'
+    },
+    options: {
+      depends: {
+        rules: [
+          {field: 'user_password', regex: /abc/g}
+        ]
+      }
+    }
+  }  
+}
+```
+
 ### Popule with a model
 ```jsx
 const MyModel = {

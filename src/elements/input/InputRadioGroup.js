@@ -24,7 +24,7 @@ const RenderRadios = ({ options }) => {
 class InputRadioGroup extends React.PureComponent{
   
   state = {
-    internalOptions: []
+    localOptions: []
   }
 
   /**
@@ -35,12 +35,12 @@ class InputRadioGroup extends React.PureComponent{
       const {options} = this.props;
       if(typeof options === 'function'){
         const data = await options();
-        this.setState({internalOptions: data});
+        this.setState({localOptions: data});
       }else{
-        this.setState({internalOptions: options});
+        this.setState({localOptions: options});
       }
     }catch(err){
-      this.setState({internalOptions: []});
+      this.setState({localOptions: []});
     }
   }
 
@@ -49,13 +49,13 @@ class InputRadioGroup extends React.PureComponent{
   }
 
   render(){
-    const {internalOptions} = this.state;
+    const {localOptions} = this.state;
     const {id,value,label,onChange} = this.props;
     return (
       <React.Fragment>
         <FormLabel component="legend">{label}</FormLabel>
         <RadioGroup name={id} value={`${value}`} onChange={onChange}>
-          <RenderRadios options={internalOptions} />
+          <RenderRadios options={localOptions} />
         </RadioGroup>
       </React.Fragment>
     )

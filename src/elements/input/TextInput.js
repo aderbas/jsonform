@@ -7,7 +7,7 @@
 import React from "react"
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
-import {enabledInput} from '../../util';
+import {toggleInput} from '../../util';
 import {TextField,InputAdornment} from '@material-ui/core';
 
 class TextInput extends React.PureComponent {
@@ -52,8 +52,14 @@ class TextInput extends React.PureComponent {
   }
 
   dependencyChanged(event){
-    const {detail} = event;
-    this.setState({disabled: enabledInput(detail)});
+    this.setState({disabled: !toggleInput(event)});
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.value === '' && this.props.value !== ''){
+      const {onChange, id} = this.props;
+      onChange({target: {name: id, value: this.props.value}});
+    }
   }
 
   render(){
@@ -68,7 +74,7 @@ class TextInput extends React.PureComponent {
         size="small"
         onBlur={this._validate}
         InputProps={{
-          endAdornment: endAdornment?<InputAdornment>{endAdornment}</InputAdornment>:null,
+          endAdornment  : endAdornment?<InputAdornment>{endAdornment}</InputAdornment>:null,
           startAdornment: startAdornment?<InputAdornment>{startAdornment}</InputAdornment>:null
         }}
         disabled={disabled}
