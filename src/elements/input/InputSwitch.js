@@ -40,10 +40,9 @@ class InputSwitch extends React.PureComponent {
 
   componentDidUpdate(prevProps){
     if(prevProps.value === '' && this.props.value !== ''){
-      const {onChange, id} = this.props;
-      onChange({target: {name: id, value: this.props.value}});
+      this.props.onChange({target: {name: this.props.id, checked: this.props.value, type: 'checkbox'}})
     }
-  }  
+  }
 
   render(){
     const {disabled} = this.state;
@@ -56,7 +55,7 @@ class InputSwitch extends React.PureComponent {
             <Switch 
               id={id}
               name={id}
-              checked={Boolean(value)}
+              checked={(value==='true')}
               disabled={disabled}
               {...rest}
             />

@@ -2,7 +2,6 @@ import React from 'react'
 
 import JsonForm from 'jsonform'
 
-const RE_EMAIL = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 export const fetchList = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=5')
@@ -16,7 +15,7 @@ export const fetchList = () => new window.Promise(resolve => {
 export const fetchObject = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=1')
     .then(res => res.json())
-    .then(json => resolve(json.results[0]))
+    .then(json => resolve({user_has_domain: json.results[0].gender === 'male', ...json.results[0]}))
     .catch(() => resolve([]));
 });
 
@@ -27,7 +26,7 @@ const simpleForm = {
       label: 'Use domain',
     }
   },
-  // without rule
+  //without rule
   'user_domain_external': {
     component: 'switch',
     props: {
@@ -37,6 +36,16 @@ const simpleForm = {
       depends: 'user_has_domain'
     }
   },
+  'gender': {
+    component: 'select',
+    props: {
+      label: 'Gender',
+      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'}]
+    },
+    options: {
+      depends: 'user_has_domain'
+    }    
+  }
 }
 
 const App = () => {
@@ -50,6 +59,7 @@ const App = () => {
           textAlign: 'right'
         }
       }}
+      fetchData={fetchObject}
       onSave={(data) => console.log(data)}
     />
   )

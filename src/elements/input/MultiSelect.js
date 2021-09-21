@@ -96,7 +96,7 @@ class MultiSelect extends React.PureComponent {
   /**
    * Set Options 
    */
-  async setOptions(param){
+  async setOptions(){
     const {options,dependency} = this.props;
     if(!dependency){
       if(typeof options === 'function'){
@@ -113,7 +113,7 @@ class MultiSelect extends React.PureComponent {
       }
     }else{
       document.addEventListener(`${dependency}_change`, this.dependencyChanged);
-      this.setState({localOptions: []});
+      this.setState({localOptions: (typeof options === 'function')?[]:options});
     }  
   }
 

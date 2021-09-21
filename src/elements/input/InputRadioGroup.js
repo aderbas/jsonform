@@ -51,7 +51,7 @@ class InputRadioGroup extends React.PureComponent{
       }
     }else{
       document.addEventListener(`${dependency}_change`, this.dependencyChanged);
-      this.setState({localOptions: []});
+      this.setState({localOptions: (typeof options === 'function')?[]:options});
     }    
   }
 
@@ -62,7 +62,6 @@ class InputRadioGroup extends React.PureComponent{
   dependencyChanged = async(event) => {
     const {options} = this.props;
     const applyRule = await toggleSelect(event,options);
-    console.log(applyRule)
     this.setState({
       localOptions: applyRule.data, 
       disabled: applyRule.disabled
@@ -81,7 +80,7 @@ class InputRadioGroup extends React.PureComponent{
   componentDidUpdate(prevProps){
     if(prevProps.value === '' && this.props.value !== ''){
       const {onChange, id} = this.props;
-      onChange({target: {name: id, value: this.props.value}});
+      onChange({target: {name: id, value: this.props.value, type: 'select-one'}});
     }
   }
 

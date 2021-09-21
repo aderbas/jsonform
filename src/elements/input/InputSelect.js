@@ -46,7 +46,9 @@ class InputSelect extends React.PureComponent {
       }
     }else{
       document.addEventListener(`${dependency}_change`, this.dependencyChanged);
-      this.setState({localOptions: this.defaultOption});
+      this.setState({
+        localOptions: (typeof options === 'function')?this.defaultOption:[...this.defaultOption, ...options]
+      });
     }  
   }
 
@@ -76,7 +78,7 @@ class InputSelect extends React.PureComponent {
   componentDidUpdate(prevProps){
     if(prevProps.value === '' && this.props.value !== ''){
       const {onChange, id} = this.props;
-      onChange({target: {name: id, value: this.props.value}});
+      onChange({target: {name: id, value: this.props.value, type: 'select-one'}});
     }
   }
 
