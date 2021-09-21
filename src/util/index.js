@@ -296,15 +296,18 @@ export const toggleSelect = async(event,options) => {
     let enable = false;
     if(detail.condition){
       const rule = detail.condition[0];
-      const compare = rulesComparators[rule.condition];
-      if(typeof compare === 'function'){
-        enable = compare(detail.value, `${rule.value}`)
+      if(rule.hasOwnProperty('regex')){
+        enable = (detail.value.match(rule.regex));
+      }else{
+        const compare = rulesComparators[rule.condition];
+        if(typeof compare === 'function'){
+          enable = compare(detail.value, `${rule.value}`)
+        }
       }
     }else{
       enable = enabledInput(event.detail);
     }
     if(typeof options !== 'function'){
-      //return this.setState({disabled: !enable})
       return new window.Promise(resolve => resolve({data: options, disabled: !(enable)}))
     }
     // check options data
@@ -312,7 +315,6 @@ export const toggleSelect = async(event,options) => {
       if(typeof options === 'function'){
         try{
           const data = await options(detail?.value);
-          //this.setState({localOptions: [...this.defaultOption, ...data], disabled: false});
           return new window.Promise(resolve => resolve({data: data, disabled: false}))
         }catch(err){
           throw err;

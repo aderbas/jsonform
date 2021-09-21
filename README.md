@@ -341,14 +341,13 @@ const formFields = {
 }
 ```
 ### Field dependency
-* For select/multiselect
+* For select/multiselect/radiogroup
 ```jsx
 const formFields = {
   'user_has_domain': {
     component: 'switch',
     props: {
       label: 'Use domain',
-      value: true,
     }
   },
   // without rule
@@ -361,7 +360,7 @@ const formFields = {
     options: {
       depends: 'user_has_domain'
     }
-  }
+  },
   // with rule. E.g: disabled if selected 'user_domain' value is 2.
   // suported conditions: eq|ne|gt|lt|le|ge
   'user_type': {

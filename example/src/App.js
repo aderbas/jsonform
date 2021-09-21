@@ -21,32 +21,22 @@ export const fetchObject = () => new window.Promise(resolve => {
 });
 
 const simpleForm = {
-	// 'gender': {
-	// 	component: 'text',
-	// 	props: {
-	// 		label: 'Gender',
-	// 	},
-	// }, 
-  'email': {
-		component: 'text',
-		props: {
-			label: 'Email',
-		}  
-  },
-  'gender': {
-    component: 'radiogroup',
+  'user_has_domain': {
+    component: 'switch',
     props: {
-      label: 'Gender',
-      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'}],
+      label: 'Use domain',
+    }
+  },
+  // without rule
+  'user_domain_external': {
+    component: 'switch',
+    props: {
+      label: 'External domain',
     },
     options: {
-      depends: {
-        rules: [
-          {field: 'email', regex: RE_EMAIL}
-        ]
-      }
-    }    
-  }  
+      depends: 'user_has_domain'
+    }
+  },
 }
 
 const App = () => {
@@ -60,7 +50,6 @@ const App = () => {
           textAlign: 'right'
         }
       }}
-      fetchData={fetchObject}
       onSave={(data) => console.log(data)}
     />
   )
