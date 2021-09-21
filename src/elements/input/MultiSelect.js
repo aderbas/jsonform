@@ -9,6 +9,7 @@ import React from 'react';
 import {Checkbox,Select,FormControl,MenuItem,InputLabel,Input,ListItemText} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
+import {toggleSelect} from '../../util';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,9 +28,9 @@ const MenuProps = {
  * @returns Element
  */
 const ConditionalRender = ({...props}) => {
-  const {id,value,label,width,internalOptions,selectChange,getLabel,disabled} = props;
+  const {id,value,label,width,localOptions,selectChange,getLabel,disabled} = props;
 
-  return (
+  return localOptions && (
     <FormControl style={{ width }}>
       <InputLabel>{label}</InputLabel>
       <Select
@@ -43,12 +44,12 @@ const ConditionalRender = ({...props}) => {
         value={value||[]}
         disabled={disabled}
       >
-        {internalOptions.map((v,k) => (
+        {localOptions.length > 0 ? localOptions.map((v,k) => (
           <MenuItem key={k} value={v.value}>
             <Checkbox checked={(value.indexOf(v.value) > -1)} />
             <ListItemText primary={v.label} />
           </MenuItem>
-        ))}
+        )) : null}
       </Select>
     </FormControl>    
   )
@@ -62,7 +63,7 @@ class MultiSelect extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      internalOptions: [],
+      localOptions: [],
       disabled: Boolean(props.dependency)
     }
   }
@@ -86,27 +87,34 @@ class MultiSelect extends React.PureComponent {
    * @returns string
    */
   _getLabel = (selected) => {
-    const {internalOptions} = this.state;
+    const {localOptions} = this.state;
     return selected.map(s => {
-      return internalOptions.filter(o => o.value === s)[0]?.label || s
+      return localOptions.filter(o => o.value === s)[0]?.label || s
     }).join(', ');
   }
 
   /**
    * Set Options 
    */
-  async setOptions(param){
-    try{
-      const {options} = this.props;
+  async setOptions(){
+    const {options,dependency} = this.props;
+    if(!dependency){
       if(typeof options === 'function'){
-        const data = await options(param);
-        this.setState({internalOptions: data, disabled: false});
+        try{
+          const data = await options();
+          if(this._isMounted){
+            this.setState({localOptions: data});
+          }
+        }catch(err){
+          this.setState(state => ({localOptions: []}));
+        }
       }else{
-        this.setState({internalOptions: options, disabled: false});
+        this.setState({localOptions: options});
       }
-    }catch(err){
-      this.setState({internalOptions: []});
-    }
+    }else{
+      document.addEventListener(`${dependency}_change`, this.dependencyChanged);
+      this.setState({localOptions: (typeof options === 'function')?[]:options});
+    }  
   }
 
   componentDidMount(){
@@ -114,6 +122,7 @@ class MultiSelect extends React.PureComponent {
     if(dependency){
       document.addEventListener(`${dependency}_change`, this.dependencyChanged);
     }
+    this._isMounted = true;
     this.setOptions();
   }
 
@@ -128,12 +137,17 @@ class MultiSelect extends React.PureComponent {
 
   dependencyChanged = async(event) => {
     const {options} = this.props;
-    const {detail} = event;
-    if(typeof detail?.value === 'boolean'){
-      this.setState({disabled: !(detail?.value)})
-    }
-    if(detail && typeof options === 'function'){
-      this.setOptions(detail?.value);
+    const applyRule = await toggleSelect(event,options);
+    this.setState({
+      localOptions: applyRule.data, 
+      disabled: applyRule.disabled
+    });
+  }  
+
+  componentDidUpdate(prevProps){
+    if(prevProps.value === '' && this.props.value !== ''){
+      const {onChange, id} = this.props;
+      onChange({target: {name: id, value: this.props.value}});
     }
   }  
 

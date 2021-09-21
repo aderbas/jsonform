@@ -5,7 +5,7 @@
 *
 */
 import React from 'react';
-import { componentList } from './util';
+import { componentList,checkFlagDependency } from './util';
 
 /**
  * Component fail
@@ -27,7 +27,7 @@ export default ({...props}) => {
     id: name,
     value: value?value:'',
     onChange: handlerChange,
-    dependency: node?.options?.depends
+    dependency: checkFlagDependency(node.options)
   }
   if(typeof node.component !== 'undefined'){
 

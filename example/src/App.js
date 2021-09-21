@@ -2,6 +2,7 @@ import React from 'react'
 
 import JsonForm from 'jsonform'
 
+
 export const fetchList = () => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=5')
     .then(res => res.json())
@@ -11,15 +12,40 @@ export const fetchList = () => new window.Promise(resolve => {
     .catch(() => resolve([]));
 });
 
+export const fetchObject = () => new window.Promise(resolve => {
+  fetch('https://api.randomuser.me/?results=1')
+    .then(res => res.json())
+    .then(json => resolve({user_has_domain: json.results[0].gender === 'male', ...json.results[0]}))
+    .catch(() => resolve([]));
+});
 
 const simpleForm = {
-	'user_type': {
-		component: 'select',
-		props: {
-			label: 'Type',
-			options: [{value: 0, label: 'Default'}, {value: 2, label: 'Admin'}]
-		},
-	},	
+  'user_has_domain': {
+    component: 'switch',
+    props: {
+      label: 'Use domain',
+    }
+  },
+  //without rule
+  'user_domain_external': {
+    component: 'switch',
+    props: {
+      label: 'External domain',
+    },
+    options: {
+      depends: 'user_has_domain'
+    }
+  },
+  'gender': {
+    component: 'select',
+    props: {
+      label: 'Gender',
+      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'}]
+    },
+    options: {
+      depends: 'user_has_domain'
+    }    
+  }
 }
 
 const App = () => {
@@ -33,6 +59,7 @@ const App = () => {
           textAlign: 'right'
         }
       }}
+      fetchData={fetchObject}
       onSave={(data) => console.log(data)}
     />
   )
