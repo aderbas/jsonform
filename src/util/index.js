@@ -6,6 +6,7 @@
 import React from 'react';
 import {Button,Box,Grid} from '@material-ui/core';
 import Component from '../components';
+import {ConfirmModal} from '../components/modal';
 import * as Elements from '../elements';
 
 /**
@@ -68,28 +69,75 @@ export const initialData = (fields) => {
 }
 
 /**
+ * Confirm modal
+ */
+const UseConfirm = ({...props}) => {
+  const {confirmSave,confirmCancel,options,...others} = props;
+
+  const confirm = () => {
+    if(typeof options.confirm === 'function'){
+      options.confirm();
+      props.onClose();
+    }
+  }
+
+  return (Boolean(confirmSave) || Boolean(confirmCancel)) ? (
+    <ConfirmModal 
+      open={options.open}
+      content={options.content}
+      onConfirm={confirm}
+      {...others}
+    />
+  ) : null
+}
+
+/**
  * Form control buttons
  * @param {any} props 
  */
 export const ControlButtons = ({...props}) => {
-  const {onSave,onCancel,boxProps,saveText,cancelText} = props;
+  const [options, setOptions] = React.useState({
+    type: 'save',
+    open: false,
+    content: props.confirmSave,
+    confirm: () => props.onSave(props.formData),
+  })
+  const {onSave,onCancel,boxProps,saveText,cancelText,...others} = props;
   
   const _handlerClickSave = () => {
-    const {formData} = props;
+    const {formData,confirmSave} = props;
     if(typeof onSave === 'function'){
+      if(Boolean(confirmSave)){
+        return setOptions({
+          type: 'save', confirm: () => onSave(formData), open: true, content: confirmSave
+        })
+      }
       // send data to parent component
       onSave(formData);
     }
   }
 
   const _handlerClickCancel = () => {
+    const {confirmCancel} = props;
     if(typeof onCancel === 'function'){
+      if(Boolean(confirmCancel)){
+        return setOptions({
+          type: 'cancel', confirm: onCancel, open: true, content: confirmCancel
+        })
+      }
       onCancel();
-    }    
+    }
   }
+
+  const closeModal = () => setOptions({...options, open: !options.open})
 
   return (
     <Box p={1} {...boxProps}>
+      <UseConfirm 
+        onClose={closeModal}
+        options={options}
+        {...others} 
+      />
       {onCancel
         ? <Button onClick={_handlerClickCancel}>{cancelText ?? 'Cancel'}</Button>
         : null
