@@ -7,6 +7,17 @@
 ## Dev Dependencies
 * [Material-UI](https://material-ui.com/pt/)
 
+## Table of Contents
+1. [Install](#install)
+2. [Basic Usage](#basic-usage)
+3. [Popule form with remote data](#popule-form-with-remote-data)
+4. [Split form into columns](#split-form-into-columns)
+5. [Custom components](#custom-components)
+6. [Elements](#elements)
+7. [Options](#options)
+8. [Popule with a model](#popule-with-a-model)
+9. [License](#license)
+
 ## Install
 
 ```bash
@@ -298,7 +309,7 @@ const formFields = {
 
 ## Options
 
-### Controls
+### Control Buttons
 ```jsx
 <JsonForm 
   components={formFields} 
@@ -308,10 +319,22 @@ const formFields = {
     boxProps: {
       textAlign: 'right'
     }
+    confirmSave: 'Confirm form submission?',
+    confirmCancel: 'Do you really want to cancel?',
+    confirmButtonsLabel: {
+      yes: 'Sim', no: 'Não'
+    }    
   }}
   onSave={(data) => console.log(data)}
 />
 ```
+- **saveText:** Text for the save button. Default: 'Save'
+- **cancelText:** Text for the cancel button. Default: 'Cancel'
+- **boxProps:** Options for panel with buttons. Default: null
+- **confirmSave:** Adds the confirm alert for the save button. String with the text of the question. Default: null
+- **confirmCancel:** Adds the confirm alert for the cancel button. String with the text of the question. Default: null
+- **confirmButtonsLabel:** Text for "yes" and "no" dialog buttons. Default: {no: 'No', yes: 'Yes'}
+
 ### Skip a property in the model
 ```jsx
 const formFields = {

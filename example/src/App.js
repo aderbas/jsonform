@@ -57,10 +57,16 @@ const App = () => {
         saveText: 'Save Form',
         boxProps: {
           textAlign: 'right'
+        },
+        confirmSave: 'Deseja realmente salvar?',
+        confirmCancel: 'Deseja cancelar?',
+        confirmButtonsLabel: {
+          no: 'Não', yes: 'Sim'
         }
       }}
       fetchData={fetchObject}
       onSave={(data) => console.log(data)}
+      onCancel={() => console.log('Cancel')}
     />
   )
 }
