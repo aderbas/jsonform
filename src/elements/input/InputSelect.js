@@ -8,12 +8,22 @@ import {InputLabel,Select} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 import {toggleSelect} from '../../util';
+import {withStyles} from '@material-ui/styles';
 
 const Option = ({value, label}) => (
   <option value={value}>
     {label}
   </option>
 )
+
+const ResponsiveSelect = withStyles(({
+  select: {
+    display: 'block',
+    '@media only screen and (max-width: 600px)': {
+      width: '100%',
+    }
+  }
+}))(Select)
 
 class InputSelect extends React.PureComponent {
 
@@ -88,14 +98,19 @@ class InputSelect extends React.PureComponent {
     return (
       <React.Fragment>
         <InputLabel htmlFor={id}>{`${label} ${required?'*':''}`}</InputLabel>
-        <Select
+        <ResponsiveSelect
           native
           id={id}
           name={id}
           value={value}
           inputProps={{ 
             'aria-label': id,
-            style: width?{width: width}:null
+            // style: {
+            //   width: width,
+            //   '@media (max-width: 600px)': {
+            //     width: 350
+            //   }
+            // }
           }}
           disabled={disabled}
           onChange={onChange}
@@ -105,7 +120,7 @@ class InputSelect extends React.PureComponent {
               value={opt.value ?? opt.label} 
               label={opt.label ?? '--'} />
           ))}
-        </Select>
+        </ResponsiveSelect>
       </React.Fragment>
     )
   }
