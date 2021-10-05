@@ -115,7 +115,11 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       fields.forEach(it => collection = {...collection, ...it});
       if(fetchData && typeof fetchData === 'function'){
         this.setState({loading: true});
-        (fetchParams?fetchData(...fetchParams):fetchData())
+        let params = fetchParams;
+        if(params && !Array.isArray(params)){
+          params = [params];
+        }
+        (params?fetchData(...params):fetchData())
           .then(res => { 
             if(res && typeof res !== 'undefined'){
               const {fetchDataHandler} = others;

@@ -12,7 +12,7 @@ export const fetchList = () => new window.Promise(resolve => {
     .catch(() => resolve([]));
 });
 
-export const fetchObject = () => new window.Promise(resolve => {
+export const fetchObject = (d) => new window.Promise(resolve => {
   fetch('https://api.randomuser.me/?results=1')
     .then(res => res.json())
     .then(json => resolve({user_has_domain: json.results[0].gender === 'male', ...json.results[0]}))
@@ -65,6 +65,7 @@ const App = () => {
         }
       }}
       fetchData={fetchObject}
+      fetchParams={11}
       onSave={(data) => console.log(data)}
       onCancel={() => console.log('Cancel')}
     />
