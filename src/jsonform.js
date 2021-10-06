@@ -15,6 +15,20 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {changeField,changeData,pushDependency} from './actions';
 
+import {ThemeProvider,createTheme} from '@material-ui/core/styles';
+
+const theme = createTheme({
+  overrides: {
+    MuiInputBase: {
+      root: {
+        '@media only screen and (max-width: 600px)': {
+          width: '100%',
+        }
+      }
+    },
+  },
+});
+
 export {default as baseComponent} from './BaseComponent';
 
 // REDUX ##
@@ -196,11 +210,13 @@ class JsonForm extends React.PureComponent {
 
   render(){
     return (
-      <Provider store={Store}>
-        <FormContainer
-          {...this.props}
-        />
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={Store}>
+          <FormContainer
+            {...this.props}
+          />
+        </Provider>
+      </ThemeProvider>
     )
   }
 }

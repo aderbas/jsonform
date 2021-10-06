@@ -95,7 +95,9 @@ class InputSelect extends React.PureComponent {
           value={value}
           inputProps={{ 
             'aria-label': id,
-            style: width?{width: width}:null
+            style: {
+              width: width
+            }
           }}
           disabled={disabled}
           onChange={onChange}

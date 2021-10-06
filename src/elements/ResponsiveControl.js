@@ -12,8 +12,7 @@ const ResponsiveControl = withStyles(({
   root: {
     display: 'block',
     margin: 4, 
-    // [theme.breakpoints.down('xs')]: {
-    //   margin: theme.spacing(.8),
+    // '@media (max-width: 600px)': {
     // }
   }
 }))(FormControl)

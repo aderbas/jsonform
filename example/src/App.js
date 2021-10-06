@@ -20,32 +20,25 @@ export const fetchObject = (d) => new window.Promise(resolve => {
 });
 
 const simpleForm = {
-  'user_has_domain': {
-    component: 'switch',
+  'user_name': {
+    component: 'text',
     props: {
-      label: 'Use domain',
+      label: 'Name'
     }
   },
-  //without rule
-  'user_domain_external': {
-    component: 'switch',
+  'user_email': {
+    component: 'text',
     props: {
-      label: 'External domain',
-    },
-    options: {
-      depends: 'user_has_domain'
+      label: 'Email'
     }
   },
-  'gender': {
+  'user_type': {
     component: 'select',
     props: {
-      label: 'Gender',
-      options: [{value: 'male', label: 'Male'},{value: 'female', label: 'Female'}]
-    },
-    options: {
-      depends: 'user_has_domain'
-    }    
-  }
+      options: [{label: 'Admin'},{label: 'Default'}],
+      label: 'Type'
+    }
+  } 
 }
 
 const App = () => {

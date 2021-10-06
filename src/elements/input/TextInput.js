@@ -9,6 +9,15 @@ import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 import {toggleInput} from '../../util';
 import {TextField,InputAdornment} from '@material-ui/core';
+import {withStyles} from '@material-ui/styles';
+
+const ResponsiveTextField = withStyles(({
+  root: {
+    '@media (max-width: 600px)': {
+      width: '100%'
+    }
+  }
+}))(TextField)
 
 class TextInput extends React.PureComponent {
 
@@ -66,7 +75,7 @@ class TextInput extends React.PureComponent {
     const {id,dbClick,endAdornment,startAdornment,validation,dispatch, ...rest} = this.props;
     const {error,disabled} = this.state;
     return (
-      <TextField
+      <ResponsiveTextField
         id={id}
         name={id}
         error={error}
