@@ -128,26 +128,29 @@ const FormContainer = connect(mapStateToProps, mapDispatchToProps)(
       let collection = {};
       fields.forEach(it => collection = {...collection, ...it});
       if(fetchData && typeof fetchData === 'function'){
-        this.setState({loading: true});
-        let params = fetchParams;
-        if(params && !Array.isArray(params)){
-          params = [params];
-        }
-        (params?fetchData(...params):fetchData())
-          .then(res => { 
-            if(res && typeof res !== 'undefined'){
-              const {fetchDataHandler} = others;
-              this.setState({loading: false});
-              changeData(res.data || res);
-              if(typeof fetchDataHandler === 'function'){
-                fetchDataHandler(res);
+        if(fetchParams && fetchParams !== ''){
+          this.setState({loading: true});
+          let params = fetchParams;
+          if(!Array.isArray(params)){
+            params = [params];
+          }
+          fetchData(...params)
+            .then(res => { 
+              if(res && typeof res !== 'undefined'){
+                const {fetchDataHandler} = others;
+                this.setState({loading: false});
+                changeData(res.data || res);
+                if(typeof fetchDataHandler === 'function'){
+                  fetchDataHandler(res);
+                }
               }
-            }
-          })
-          .catch(() => {
-            this.setState({loading: false});
-            changeData(model?model:initialData(collection));
-          });
+            })
+            .catch(() => {
+              this.setState({loading: false});
+              changeData(model?model:initialData(collection));
+            });          
+        }
+        changeData(model?model:initialData(collection));
       }else{
         changeData(model?model:initialData(collection));
       }
