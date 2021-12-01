@@ -1,5 +1,4 @@
 import React from 'react'
-
 import JsonForm from 'jsonform'
 
 
@@ -44,7 +43,8 @@ const simpleForm = {
 const App = () => {
   return (
     <JsonForm 
-      title="My Form"
+      title={<h1>My Form</h1>}
+      secondary={<div>Help Text here</div>}
       components={simpleForm}
       controlOptions={{
         saveText: 'Save Form',

@@ -1,6 +1,6 @@
 {
   "name": "@aderbalnunes/react-jsonform",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Create Form from a custom JSON",
   "author": "Aderbal Nunes aderbalnunes@gmail.com",
   "license": "MIT",

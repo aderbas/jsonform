@@ -8,7 +8,7 @@ import React from "react"
 import { Provider } from 'react-redux';
 import { Store } from './store';
 import {initialData,ControlButtons,Column,Row,seeqDependencies,dispatchEvent} from './util';
-import {Grid} from '@material-ui/core';
+import {Grid,Box} from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
@@ -52,10 +52,11 @@ const CustomGrid = ({...props}) => {
 }
 
 const ConditionalRender = ({...props}) => {
-  const {id,name,title,controlOptions,loading, ...others} = props;
+  const {id,name,title,secondary,controlOptions,loading, ...others} = props;
   return (
     <form id={id} name={name}>
-      <h4>{title}</h4>
+      <Box>{title}</Box>
+      <Box>{secondary}</Box>
       <Grid container>
         <CustomGrid {...others} />
       </Grid>
