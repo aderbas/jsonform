@@ -55,7 +55,7 @@ class InputSwitch extends React.PureComponent {
             <Switch 
               id={id}
               name={id}
-              checked={(value==='true')}
+              checked={(typeof value === 'boolean')?value:(value==='true')}
               disabled={disabled}
               {...rest}
             />

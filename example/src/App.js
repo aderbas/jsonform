@@ -22,7 +22,8 @@ const simpleForm = {
   'user_name': {
     component: 'text',
     props: {
-      label: 'Name'
+      label: 'Name',
+      value: 'Fulano'
     }
   },
   'user_email': {
@@ -35,7 +36,7 @@ const simpleForm = {
     component: 'select',
     props: {
       options: [{label: 'Admin'},{label: 'Default'}],
-      label: 'Type'
+      label: 'Type',
     }
   } 
 }
@@ -47,20 +48,12 @@ const App = () => {
       secondary={<div>Help Text here</div>}
       components={simpleForm}
       controlOptions={{
-        saveText: 'Save Form',
+        saveText: 'Save',
         boxProps: {
           textAlign: 'right'
-        },
-        confirmSave: 'Deseja realmente salvar?',
-        confirmCancel: 'Deseja cancelar?',
-        confirmButtonsLabel: {
-          no: 'Não', yes: 'Sim'
         }
-      }}
-      fetchData={fetchObject}
-      fetchParams={11}
+      }}       
       onSave={(data) => console.log(data)}
-      onCancel={() => console.log('Cancel')}
     />
   )
 }
