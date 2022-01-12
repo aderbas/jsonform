@@ -4,7 +4,7 @@
  * @since 28/10/2020
  */
 import React from 'react';
-import {Button,Box,Grid} from '@material-ui/core';
+import {Button,Box,Grid} from '@mui/material';
 import Component from '../components';
 import {ConfirmModal} from '../components/modal';
 import * as Elements from '../elements';

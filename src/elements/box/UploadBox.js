@@ -4,7 +4,7 @@
  */
 
 import React, { PureComponent } from 'react';
-import {withStyles} from '@material-ui/styles';
+import {withStyles} from '@mui/styles';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({

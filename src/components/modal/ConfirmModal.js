@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dialog,DialogActions,DialogContent,DialogContentText,Button} from '@material-ui/core';
+import {Dialog,DialogActions,DialogContent,DialogContentText,Button} from '@mui/material';
 import {PropTypes} from 'prop-types';
 
 const ConfirmModal = ({...props}) => {

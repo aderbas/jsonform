@@ -6,7 +6,7 @@
  * Copyright 2021 Zenite Tecnologia.
  */
 import React from 'react';
-import {Checkbox,Select,FormControl,MenuItem,InputLabel,Input,ListItemText} from '@material-ui/core';
+import {Checkbox,Select,FormControl,MenuItem,InputLabel,Input,ListItemText} from '@mui/material';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 import {toggleSelect} from '../../util';

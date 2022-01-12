@@ -5,8 +5,8 @@
  *
  * Copyright 2021.
  */
-import {withStyles} from '@material-ui/styles';
-import FormControl from '@material-ui/core/FormControl';
+import {withStyles} from '@mui/styles';
+import FormControl from '@mui/material/FormControl';
 
 const ResponsiveControl = withStyles(({
   root: {

@@ -7,7 +7,7 @@
 
 import React from "react"
 import baseComponent from '../../BaseComponent';
-import {Divider} from '@material-ui/core';
+import {Divider} from '@mui/material';
 
 class Separator extends React.Component {
 

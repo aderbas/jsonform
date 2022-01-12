@@ -8,14 +8,14 @@ import React from "react"
 import { Provider } from 'react-redux';
 import { Store } from './store';
 import {initialData,ControlButtons,Column,Row,seeqDependencies,dispatchEvent} from './util';
-import {Grid} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {changeField,changeData,pushDependency} from './actions';
 
-import {ThemeProvider,createTheme} from '@material-ui/core/styles';
+import {ThemeProvider,createTheme} from '@mui/material/styles';
 
 const theme = createTheme({
   overrides: {

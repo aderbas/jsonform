@@ -57,8 +57,6 @@ const App = () => {
           no: 'Não', yes: 'Sim'
         }
       }}
-      fetchData={fetchObject}
-      fetchParams={11}
       onSave={(data) => console.log(data)}
       onCancel={() => console.log('Cancel')}
     />

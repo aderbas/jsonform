@@ -8,8 +8,8 @@ import React from "react"
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 import {toggleInput} from '../../util';
-import {TextField,InputAdornment} from '@material-ui/core';
-import {withStyles} from '@material-ui/styles';
+import {TextField,InputAdornment} from '@mui/material';
+import {withStyles} from '@mui/styles';
 
 const ResponsiveTextField = withStyles(({
   root: {

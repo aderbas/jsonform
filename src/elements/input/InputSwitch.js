@@ -6,9 +6,7 @@
 import React from "react"
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import {FormGroup,FormControlLabel,Switch} from '@mui/material';
 import {toggleInput} from '../../util';
 
 class InputSwitch extends React.PureComponent {

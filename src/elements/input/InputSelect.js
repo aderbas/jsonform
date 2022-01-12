@@ -4,7 +4,7 @@
  * @since: 24/06/2020
  */
 import React from 'react';
-import {InputLabel,Select} from '@material-ui/core';
+import {InputLabel,Select,MenuItem,FormControl} from '@mui/material';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 import {toggleSelect} from '../../util';
@@ -86,29 +86,24 @@ class InputSelect extends React.PureComponent {
     const {localOptions,disabled} = this.state;
     const {value,id,onChange,label,width,required} = this.props;
     return (
-      <React.Fragment>
-        <InputLabel htmlFor={id}>{`${label} ${required?'*':''}`}</InputLabel>
+      <FormControl sx={{ minWidth: width }}>
+        <InputLabel id={id}>{`${label} ${required?'*':''}`}</InputLabel>
         <Select
-          native
           id={id}
           name={id}
           value={value}
+          label={`${label} ${required?'*':''}`}
           inputProps={{ 
             'aria-label': id,
-            style: {
-              width: width
-            }
           }}
           disabled={disabled}
           onChange={onChange}
         >
           {localOptions.map((opt, key) => (
-            <Option key={key} 
-              value={opt.value ?? opt.label} 
-              label={opt.label ?? '--'} />
+            <MenuItem key={key} value={opt.value ?? opt.label}>{opt.label ?? '--'}</MenuItem>
           ))}
         </Select>
-      </React.Fragment>
+      </FormControl>
     )
   }
 }

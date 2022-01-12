@@ -6,7 +6,7 @@
  * Copyright 2021.
  */
 import React from 'react';
-import {FormLabel,RadioGroup,FormControlLabel,Radio} from '@material-ui/core';
+import {FormLabel,RadioGroup,FormControlLabel,Radio} from '@mui/material';
 import PropTypes from 'prop-types';
 import baseComponent from '../../BaseComponent';
 import {toggleSelect}  from '../../util';
